@@ -23,13 +23,13 @@ const CTASection = () => {
             <a href="https://wa.me/254790425578" target="_blank" rel="noopener noreferrer">
               <Button variant="heroOutline" size="xl" className="w-full sm:w-auto">
                 <Phone className="w-5 h-5" />
-                Consult Lewis (Clinical)
+                Consult Dr. Lewis (Clinician)
               </Button>
             </a>
             <a href="https://wa.me/25476928470" target="_blank" rel="noopener noreferrer">
               <Button variant="heroOutline" size="xl" className="w-full sm:w-auto">
                 <Phone className="w-5 h-5" />
-                Consult Faith (Nutrition)
+                Consult Dr. Faith (Nutritionist)
               </Button>
             </a>
           </div>
