@@ -8,7 +8,7 @@ const Disclaimer = () => (
       <div className="container mx-auto px-4 max-w-3xl">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">Medical Disclaimer</h1>
         <div className="prose prose-lg text-muted-foreground space-y-6">
-          <p>The information provided by HealthConnect Kenya is for general informational and educational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment.</p>
+          <p>The information provided by BeHealth Kenya is for general informational and educational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment.</p>
           <h2 className="text-xl font-semibold text-foreground mt-8">Important Points</h2>
           <ul className="list-disc pl-6 space-y-2">
             <li>This service is NOT for medical emergencies. Call emergency services or visit the nearest hospital for emergencies.</li>
