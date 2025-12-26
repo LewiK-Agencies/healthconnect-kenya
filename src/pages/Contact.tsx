@@ -7,18 +7,18 @@ import { Phone, Clock, MapPin, AlertTriangle, MessageCircle } from "lucide-react
 const Contact = () => {
   const contacts = [
     {
-      name: "Lewis Muli Keli",
-      role: "Clinical Officer",
+      name: "Dr. Lewis",
+      role: "Clinician",
       specialization: "Dermatology & Reproductive Health",
       phone: "254790425578",
       displayPhone: "+254 790 425 578",
     },
     {
-      name: "Faith Mukai Masila",
+      name: "Dr. Faith",
       role: "Nutritionist & Mental Health Counselor",
       specialization: "Nutrition & Mental Wellness",
-      phone: "25476928470",
-      displayPhone: "+254 769 284 70",
+      phone: "254769284070",
+      displayPhone: "+254 769 284 070",
     },
   ];
 
