@@ -112,13 +112,13 @@ const HowItWorks = () => {
               <a href="https://wa.me/254790425578" target="_blank" rel="noopener noreferrer">
                 <Button variant="whatsapp" size="lg" className="gap-2">
                   <Phone className="w-5 h-5" />
-                  Consult Lewis (Clinical)
+                  Consult Dr. Lewis (Clinician)
                 </Button>
               </a>
               <a href="https://wa.me/25476928470" target="_blank" rel="noopener noreferrer">
                 <Button variant="whatsapp" size="lg" className="gap-2">
                   <Phone className="w-5 h-5" />
-                  Consult Faith (Nutrition)
+                  Consult Dr. Faith (Nutritionist)
                 </Button>
               </a>
             </div>
