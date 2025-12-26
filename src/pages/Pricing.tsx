@@ -8,7 +8,7 @@ const Pricing = () => {
   const plans = [
     {
       name: "General Consultation",
-      price: 399,
+      price: 299,
       description: "Basic health consultation for common ailments",
       features: [
         "WhatsApp consultation",
@@ -16,12 +16,12 @@ const Pricing = () => {
         "Treatment recommendations",
         "Follow-up advice",
       ],
-      provider: "Lewis or Faith",
+      provider: "Dr. Lewis or Dr. Faith",
       popular: false,
     },
     {
       name: "Dermatology Consultation",
-      price: 499,
+      price: 299,
       description: "Specialized skin care assessment and treatment",
       features: [
         "Photo-based diagnosis",
@@ -30,12 +30,12 @@ const Pricing = () => {
         "Skin care routine advice",
         "Follow-up included",
       ],
-      provider: "Lewis",
+      provider: "Dr. Lewis",
       popular: true,
     },
     {
       name: "Reproductive Health",
-      price: 499,
+      price: 299,
       description: "Confidential sexual and reproductive health care",
       features: [
         "Private consultation",
@@ -44,12 +44,12 @@ const Pricing = () => {
         "Treatment recommendations",
         "Complete confidentiality",
       ],
-      provider: "Lewis",
+      provider: "Dr. Lewis",
       popular: false,
     },
     {
       name: "Mental Health Session",
-      price: 699,
+      price: 399,
       description: "Professional counseling and emotional support",
       features: [
         "45-min session",
@@ -59,7 +59,7 @@ const Pricing = () => {
         "Coping strategies",
         "Follow-up scheduling",
       ],
-      provider: "Faith",
+      provider: "Dr. Faith",
       popular: true,
     },
     {
@@ -72,14 +72,14 @@ const Pricing = () => {
         "Q&A session",
         "Ongoing support",
       ],
-      provider: "Faith",
+      provider: "Dr. Faith",
       popular: false,
     },
   ];
 
   const getWhatsAppNumber = (provider: string) => {
-    if (provider === "Faith") return "25476928470";
-    if (provider === "Lewis") return "254790425578";
+    if (provider === "Dr. Faith") return "254769284070";
+    if (provider === "Dr. Lewis") return "254790425578";
     return "254790425578";
   };
 
