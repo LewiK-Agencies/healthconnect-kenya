@@ -84,18 +84,18 @@ const Footer = () => {
                   className="flex items-center gap-2 text-background/70 hover:text-primary transition-colors text-sm"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>Lewis: +254 790 425 578</span>
+                  <span>Dr. Lewis: +254 790 425 578</span>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://wa.me/25476928470"
+                  href="https://wa.me/254769284070"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-background/70 hover:text-primary transition-colors text-sm"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>Faith: +254 769 284 70</span>
+                  <span>Dr. Faith: +254 769 284 070</span>
                 </a>
               </li>
               <li className="flex items-center gap-2 text-background/70 text-sm">
