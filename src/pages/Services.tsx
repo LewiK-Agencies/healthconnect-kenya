@@ -116,7 +116,7 @@ const Services = () => {
                   </div>
                   <div>
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground">Lewis Muli Keli</h2>
-                    <p className="text-primary font-medium">Clinical Officer</p>
+                    <p className="text-primary font-medium">Clinician</p>
                   </div>
                 </div>
                 <p className="text-muted-foreground max-w-xl">
@@ -126,7 +126,7 @@ const Services = () => {
               <a href="https://wa.me/254790425578" target="_blank" rel="noopener noreferrer">
                 <Button variant="whatsapp" size="lg" className="gap-2">
                   <Phone className="w-5 h-5" />
-                  Consult Lewis on WhatsApp
+                  Consult Dr. Lewis on WhatsApp
                 </Button>
               </a>
             </div>
@@ -176,10 +176,10 @@ const Services = () => {
                   Expert in nutrition counseling and mental health support for all life stages.
                 </p>
               </div>
-              <a href="https://wa.me/25476928470" target="_blank" rel="noopener noreferrer">
+              <a href="https://wa.me/254769284070" target="_blank" rel="noopener noreferrer">
                 <Button variant="whatsapp" size="lg" className="gap-2">
                   <Phone className="w-5 h-5" />
-                  Consult Faith on WhatsApp
+                  Consult Dr. Faith on WhatsApp
                 </Button>
               </a>
             </div>
@@ -196,7 +196,7 @@ const Services = () => {
                   <h3 className="text-lg font-semibold text-foreground mb-2">{service.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-4">{service.description}</p>
                   <a
-                    href={`https://wa.me/25476928470?text=${encodeURIComponent(`Hi Faith, I need a consultation for ${service.title}`)}`}
+                    href={`https://wa.me/254769284070?text=${encodeURIComponent(`Hi Faith, I need a consultation for ${service.title}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
