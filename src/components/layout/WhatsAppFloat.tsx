@@ -6,15 +6,15 @@ const WhatsAppFloat = () => {
 
   const contacts = [
     {
-      name: "Lewis Muli Keli",
-      role: "Clinical Officer",
+      name: "Dr. Lewis",
+      role: "Clinician",
       phone: "254790425578",
       services: "Dermatology & Reproductive Health",
     },
     {
-      name: "Faith Mukai Masila",
+      name: "Dr. Faith",
       role: "Nutritionist & Mental Health",
-      phone: "25476928470",
+      phone: "254769284070",
       services: "Nutrition & Mental Wellness",
     },
   ];
