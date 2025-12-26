@@ -115,7 +115,7 @@ const Services = () => {
                     <Stethoscope className="w-8 h-8 text-primary" />
                   </div>
                   <div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground">Lewis Muli Keli</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground">Dr. Lewis</h2>
                     <p className="text-primary font-medium">Clinician</p>
                   </div>
                 </div>
@@ -168,7 +168,7 @@ const Services = () => {
                     <Apple className="w-8 h-8 text-green" />
                   </div>
                   <div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground">Faith Mukai Masila</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground">Dr. Faith</h2>
                     <p className="text-green font-medium">Nutritionist & Mental Health Counselor</p>
                   </div>
                 </div>
