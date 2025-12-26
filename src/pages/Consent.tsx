@@ -8,7 +8,7 @@ const Consent = () => (
       <div className="container mx-auto px-4 max-w-3xl">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">Consent for Online Consultation</h1>
         <div className="prose prose-lg text-muted-foreground space-y-6">
-          <p>By engaging in an online consultation with HealthConnect Kenya, you consent to the following:</p>
+          <p>By engaging in an online consultation with BeHealth Kenya, you consent to the following:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>I understand that this is an online consultation via WhatsApp, not an in-person medical examination.</li>
             <li>I agree to provide accurate and complete health information.</li>
