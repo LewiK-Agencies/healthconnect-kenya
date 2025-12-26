@@ -170,7 +170,7 @@ const Shop = () => {
       : products.filter((p) => p.category === activeCategory);
 
   const getWhatsAppLink = (productName: string) => {
-    return `https://wa.me/25476928470?text=${encodeURIComponent(`Hi Faith, I'm interested in ordering the ${productName}`)}`;
+    return `https://wa.me/254769284070?text=${encodeURIComponent(`Hi Faith, I'm interested in ordering the ${productName}`)}`;
   };
 
   return (
@@ -187,11 +187,11 @@ const Shop = () => {
               Quality Health Products
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-              Doctor-recommended wellness products delivered to your door. All orders managed by Faith Mukai Masila.
+              Doctor-recommended wellness products delivered to your door. All orders are managed by Dr. Faith.
             </p>
             <div className="inline-flex items-center gap-2 bg-card px-4 py-2 rounded-full border border-border">
               <Phone className="w-4 h-4 text-[hsl(142,70%,45%)]" />
-              <span className="text-sm text-foreground">Order via WhatsApp: +254 769 284 70</span>
+              <span className="text-sm text-foreground">Order via WhatsApp: +254 769 284 070</span>
             </div>
           </div>
         </section>
