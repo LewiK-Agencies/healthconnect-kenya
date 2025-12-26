@@ -7,20 +7,20 @@ import { Target, Eye, Shield, Heart, Phone, Stethoscope, Apple } from "lucide-re
 const About = () => {
   const team = [
     {
-      name: "Lewis Muli Keli",
-      role: "Clinical Officer",
+      name: "Dr. Lewis",
+      role: "Clinician",
       specialization: "Dermatology & Reproductive Health",
-      description: "Licensed clinical officer with extensive experience in dermatology consultations and reproductive health care. Committed to providing confidential, professional healthcare via WhatsApp.",
+      description: "Licensed clinician with extensive experience in dermatology consultations and reproductive health care. Committed to providing confidential, professional healthcare via WhatsApp.",
       phone: "254790425578",
       icon: Stethoscope,
       color: "bg-primary/10 text-primary",
     },
     {
-      name: "Faith Mukai Masila",
+      name: "Dr. Faith",
       role: "Nutritionist & Mental Health Counselor",
       specialization: "Nutrition & Mental Wellness",
       description: "Certified nutritionist and mental health counselor passionate about helping clients achieve optimal health through personalized nutrition plans and emotional support.",
-      phone: "25476928470",
+      phone: "254769284070",
       icon: Apple,
       color: "bg-green-light text-green",
     },
@@ -58,7 +58,7 @@ const About = () => {
               Your Trusted Healthcare Partner
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              HealthConnect Kenya was founded to make quality healthcare accessible to all Kenyans through confidential online consultations.
+              BeHealth Kenya was founded to make quality healthcare accessible to all Kenyans through confidential online consultations.
             </p>
           </div>
         </section>
