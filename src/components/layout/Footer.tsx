@@ -16,7 +16,7 @@ const Footer = () => {
                 <Heart className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <span className="font-bold text-lg">HealthConnect</span>
+                <span className="font-bold text-lg">BeHealth</span>
                 <span className="text-primary font-semibold text-sm block -mt-1">Kenya</span>
               </div>
             </Link>
@@ -117,7 +117,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-background/60 text-sm">
-              © {currentYear} HealthConnect Kenya. All rights reserved.
+              © {currentYear} BeHealth Kenya. All rights reserved.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
               {[
