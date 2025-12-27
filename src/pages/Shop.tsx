@@ -38,7 +38,7 @@ const Shop = () => {
       originalPrice: 2400,
       rating: 4.7,
       reviews: 32,
-      image: "https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=400",
+      imageUrl: 'https://images.pexels.com/photos/3762879/pexels-photo-3762879.jpeg?auto=compress&cs=tinysrgb&w=400',
       badge: null,
       description: "Effective treatment for ringworm, athlete's foot, and fungal infections.",
     },
