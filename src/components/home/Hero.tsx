@@ -121,7 +121,7 @@ const Hero = () => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Starting from</p>
-                    <p className="font-semibold text-foreground">Ksh 399</p>
+                    <p className="font-semibold text-foreground">Ksh 299</p>
                   </div>
                 </div>
               </div>
