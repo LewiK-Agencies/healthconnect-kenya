@@ -2,14 +2,14 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Button } from "@/components/ui/button";
-import { Phone, Clock, MapPin, AlertTriangle, MessageCircle } from "lucide-react";
+import { Phone, Clock, MapPin, AlertTriangle, MessageCircle, CreditCard } from "lucide-react";
 
 const Contact = () => {
   const contacts = [
     {
       name: "Dr. Lewis",
       role: "Clinician",
-      specialization: "Dermatology & Reproductive Health",
+      specialization: "Dermatology, Reproductive Health & Dental Care",
       phone: "254790425578",
       displayPhone: "+254 790 425 578",
     },
@@ -27,9 +27,9 @@ const Contact = () => {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-gradient-sky py-16 md:py-24">
+        <section className="bg-gradient-sky py-20 md:py-28">
           <div className="container mx-auto px-4 text-center">
-            <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-3">
+            <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">
               Contact Us
             </span>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -42,7 +42,7 @@ const Contact = () => {
         </section>
 
         {/* Contact Cards */}
-        <section className="py-16 md:py-24 bg-background">
+        <section className="py-20 md:py-28 bg-background">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {contacts.map((contact, index) => (
@@ -50,8 +50,8 @@ const Contact = () => {
                   key={index}
                   className="bg-card rounded-2xl p-8 border border-border hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-[hsl(142,70%,45%)]/10 flex items-center justify-center mb-6">
-                    <MessageCircle className="w-8 h-8 text-[hsl(142,70%,45%)]" />
+                  <div className="w-16 h-16 rounded-2xl bg-green/10 flex items-center justify-center mb-6">
+                    <MessageCircle className="w-8 h-8 text-green" />
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-1">{contact.name}</h3>
                   <p className="text-primary font-medium mb-1">{contact.role}</p>
@@ -79,7 +79,7 @@ const Contact = () => {
         </section>
 
         {/* Info Section */}
-        <section className="py-16 md:py-24 bg-muted/50">
+        <section className="py-20 md:py-28 bg-muted/40">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="bg-card rounded-2xl p-6 border border-border text-center">
@@ -106,12 +106,12 @@ const Contact = () => {
 
               <div className="bg-card rounded-2xl p-6 border border-border text-center">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-6 h-6 text-primary" />
+                  <CreditCard className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">M-Pesa Till</h3>
+                <h3 className="font-semibold text-foreground mb-2">Payment</h3>
                 <p className="text-muted-foreground text-sm">
-                  <span className="text-foreground font-bold text-lg">4342368</span><br />
-                  Buy Goods
+                  PayBill: <span className="text-foreground font-bold">542542</span><br />
+                  Account: <span className="text-foreground font-bold">38549</span>
                 </p>
               </div>
             </div>
@@ -121,7 +121,7 @@ const Contact = () => {
         {/* Emergency Disclaimer */}
         <section className="py-12 bg-background">
           <div className="container mx-auto px-4">
-            <div className="max-w-2xl mx-auto bg-destructive/10 border border-destructive/30 rounded-2xl p-6 md:p-8">
+            <div className="max-w-2xl mx-auto bg-destructive/10 border border-destructive/20 rounded-2xl p-7 md:p-8">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-destructive/20 flex items-center justify-center flex-shrink-0">
                   <AlertTriangle className="w-6 h-6 text-destructive" />

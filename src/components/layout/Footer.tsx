@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Heart, Phone, Mail, MapPin, Clock } from "lucide-react";
+import { Heart, Phone, MapPin, Clock } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -62,8 +62,8 @@ const Footer = () => {
                 "Reproductive Health",
                 "Nutrition Counseling",
                 "Mental Health Support",
+                "Dental & Oral Health",
                 "Wellness Products",
-                "Health Coaching",
               ].map((service) => (
                 <li key={service}>
                   <span className="text-background/70 text-sm">{service}</span>
@@ -105,7 +105,7 @@ const Footer = () => {
             </ul>
             <div className="mt-4 p-3 bg-background/10 rounded-lg">
               <p className="text-xs text-background/70">
-                <strong className="text-primary">M-Pesa Till:</strong> 4342368
+                <strong className="text-primary">PayBill:</strong> 542542 | <strong className="text-primary">Account:</strong> 38549
               </p>
             </div>
           </div>
