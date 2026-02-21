@@ -9,7 +9,7 @@ const Pricing = () => {
     {
       name: "General Consultation",
       price: 299,
-      description: "Basic health consultation for common ailments",
+      description: "Basic health consultation for common ailments and general medical advice",
       features: [
         "WhatsApp consultation",
         "Health assessment",
@@ -22,7 +22,7 @@ const Pricing = () => {
     {
       name: "Dermatology Consultation",
       price: 299,
-      description: "Specialized skin care assessment and treatment",
+      description: "Specialized skin assessment, diagnosis, and personalized treatment plan",
       features: [
         "Photo-based diagnosis",
         "Personalized treatment plan",
@@ -36,7 +36,7 @@ const Pricing = () => {
     {
       name: "Reproductive Health",
       price: 299,
-      description: "Confidential sexual and reproductive health care",
+      description: "Confidential sexual and reproductive health consultation with complete privacy",
       features: [
         "Private consultation",
         "STI guidance",
@@ -48,9 +48,23 @@ const Pricing = () => {
       popular: false,
     },
     {
+      name: "Dental Health",
+      price: 299,
+      description: "Expert dental consultation for bad breath, oral hygiene, and gum health",
+      features: [
+        "Bad breath assessment",
+        "Oral hygiene guidance",
+        "Gum care recommendations",
+        "Treatment plan",
+        "Follow-up advice",
+      ],
+      provider: "Dr. Lewis",
+      popular: false,
+    },
+    {
       name: "Mental Health Session",
       price: 399,
-      description: "Professional counseling and emotional support",
+      description: "Professional counseling for stress, anxiety, depression, and emotional wellness",
       features: [
         "45-min session",
         "Stress & anxiety support",
@@ -65,7 +79,7 @@ const Pricing = () => {
     {
       name: "Nutrition Follow-up",
       price: 299,
-      description: "Follow-up session for existing nutrition clients",
+      description: "Progress review and plan adjustments for existing nutrition clients",
       features: [
         "Progress review",
         "Plan adjustments",
@@ -88,9 +102,9 @@ const Pricing = () => {
       <Navbar />
       <main className="flex-1">
         {/* Hero */}
-        <section className="bg-gradient-sky py-16 md:py-24">
+        <section className="bg-gradient-sky py-20 md:py-28">
           <div className="container mx-auto px-4 text-center">
-            <span className="inline-block text-primary font-semibold text-sm uppercase tracking-wider mb-3">
+            <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">
               Pricing
             </span>
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
@@ -103,13 +117,13 @@ const Pricing = () => {
         </section>
 
         {/* Pricing Cards */}
-        <section className="py-16 md:py-24 bg-background">
+        <section className="py-20 md:py-28 bg-background">
           <div className="container mx-auto px-4">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {plans.map((plan, index) => (
                 <div
                   key={index}
-                  className={`relative bg-card rounded-2xl p-6 md:p-8 border ${
+                  className={`relative bg-card rounded-2xl p-7 md:p-8 border ${
                     plan.popular ? "border-primary shadow-lg" : "border-border"
                   } hover:shadow-xl transition-all duration-300`}
                 >
@@ -163,22 +177,24 @@ const Pricing = () => {
         </section>
 
         {/* Payment Info */}
-        <section className="py-16 md:py-24 bg-muted/50">
+        <section className="py-20 md:py-28 bg-muted/40">
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center">
-              <div className="w-16 h-16 rounded-2xl bg-[hsl(142,70%,45%)]/10 flex items-center justify-center mx-auto mb-6">
-                <CreditCard className="w-8 h-8 text-[hsl(142,70%,45%)]" />
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                <CreditCard className="w-8 h-8 text-primary" />
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                Payment via M-Pesa
+                Payment via I&M Bank
               </h2>
               <p className="text-muted-foreground mb-8">
-                Make your payment easily and securely using M-Pesa. After payment, send your confirmation to WhatsApp to proceed.
+                Make your payment easily and securely via M-Pesa. After payment, send your confirmation to WhatsApp to proceed with your consultation.
               </p>
 
               <div className="bg-card rounded-2xl p-8 border border-border shadow-lg">
-                <p className="text-lg text-foreground mb-2">M-Pesa Till Number</p>
-                <p className="text-5xl font-bold text-primary mb-4">4342368</p>
+                <p className="text-lg text-foreground mb-2">M-Pesa PayBill Number</p>
+                <p className="text-5xl font-bold text-primary mb-2">542542</p>
+                <p className="text-lg text-muted-foreground mb-1">Account Number</p>
+                <p className="text-3xl font-bold text-foreground mb-4">38549</p>
                 <p className="text-sm text-muted-foreground">
                   After payment, screenshot your M-Pesa confirmation and send it via WhatsApp to start your consultation.
                 </p>
