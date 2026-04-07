@@ -20,16 +20,77 @@ interface BlogPost {
 
 const blogPosts: BlogPost[] = [
   {
-    slug: "understanding-acne-causes-treatment",
-    title: "Understanding Acne: Causes, Types & Effective Treatment in Kenya",
-    excerpt: "Acne is the most common skin condition in Kenya. Learn what causes it, the different types, and clinically proven treatments to get clear skin fast.",
-    coverImage: "/images/products/skincare-kit.jpg",
+    slug: "acne-treatment-kenya-causes-solutions",
+    title: "Acne Treatment in Kenya: The Clinician’s Guide to Clear Skin",
+    excerpt: "Struggling with breakouts? From Nairobi's dust to hormonal shifts, discover why acne is common in Kenya and the clinically proven treatments to fix it.",
+    coverImage: "/images/blog/kenya-dermatology-acne.jpg",
     author: "Lewis Muli Keli",
     category: "Dermatology",
-    tags: ["acne", "skin care", "dermatology"],
-    publishedAt: "2026-03-25",
-    content: `Acne affects millions of Kenyans, from teenagers to adults in their 40s. It's caused by clogged pores, excess oil production, bacteria, and hormonal changes.\n\n## Types of Acne\n\nThere are several types: whiteheads, blackheads, papules, pustules, nodules, and cystic acne. Each requires a different treatment approach.\n\n## Treatment Options\n\nMild acne responds well to over-the-counter products containing salicylic acid or benzoyl peroxide. Moderate to severe acne may require prescription medications like retinoids or antibiotics.\n\n## When to See a Clinician\n\nIf over-the-counter treatments haven't worked after 8 weeks, or if you have painful cystic acne, consult a healthcare professional. At BeHealth Kenya, Lewis can assess your skin condition via WhatsApp and recommend the right treatment plan.\n\n## Prevention Tips\n\nWash your face twice daily, avoid touching your face, change pillowcases weekly, stay hydrated, and maintain a balanced diet low in processed sugars.`,
-  },
+    tags: ["Acne Kenya", "Skincare Routine", "Clinical Dermatology", "Nairobi Health"],
+    publishedAt: "2026-04-08",
+    content: `
+Acne is the most treated skin condition in Kenya, affecting everyone from teenagers to adults in their 40s. While global advice is everywhere, Kenyan skin faces unique challenges—including high UV exposure, urban pollution in cities like Nairobi, and the prevalence of post-acne dark spots.
+
+As a clinician, I see many patients who have damaged their skin barrier with harsh "bleaching" soaps or DIY remedies. This guide breaks down what actually works for our climate and skin types.
+
+## Why is Acne So Common in Kenya?
+Beyond genetics, several local factors trigger breakouts:
+* **Environmental Pollution:** Dust and exhaust fumes in urban areas clog pores.
+* **The Equatorial Sun:** High UV levels can darken acne scars, leading to persistent "dark spots" or Hyperpigmentation.
+* **Hard Water:** In many parts of Kenya, high mineral content in water can irritate the skin barrier.
+* **Dietary Triggers:** High-glycemic diets (excessive sugar and refined starches) can fuel inflammation.
+
+## Types of Acne and How to Identify Them
+
+
+[Image of the different types of acne: blackheads, whiteheads, papules, pustules, nodules, and cysts]
+
+
+Understanding your type is the first step to the right treatment:
+1.  **Comedonal (Blackheads/Whiteheads):** Non-inflammatory, caused by clogged pores.
+2.  **Inflammatory (Papules/Pustules):** Red, painful bumps often containing pus.
+3.  **Cystic Acne:** Deep, painful "lumps" under the skin that carry a high risk of scarring.
+
+## Clinically Proven Treatment Options in Kenya
+Treatment depends on severity. Here is what I typically recommend:
+
+### Mild Acne
+Focus on over-the-counter (OTC) actives available in local pharmacies:
+* **Salicylic Acid:** Great for oily skin and blackheads (e.g., CeraVe or Neutrogena washes).
+* **Benzoyl Peroxide:** Kills acne-causing bacteria (e.g., Brevoxyl or Panoxyl).
+
+### Moderate to Severe Acne
+This requires clinical intervention. Options include:
+* **Topical Retinoids:** (e.g., Adapalene/Differin) to speed up cell turnover.
+* **Azelaic Acid:** Excellent for Kenyan skin as it treats both acne and the dark spots (PIH) left behind.
+* **Oral Antibiotics:** To reduce deep-seated inflammation.
+
+## The "BeHealth" Daily Routine for Kenyan Skin
+1.  **Cleanse:** Use a gentle, pH-balanced cleanser twice daily to remove Nairobi dust.
+2.  **Treat:** Apply your prescribed active (Retinoid or Salicylic acid) at night.
+3.  **Moisturize:** Never skip this! Use a "non-comedogenic" moisturizer to keep the skin barrier strong.
+4.  **Protect:** **Essential.** Apply SPF 30+ every morning. Without sunscreen, your acne marks will turn into permanent dark spots.
+
+## Frequently Asked Questions (FAQ)
+
+**Q: Does eating chocolate or "chips" cause acne?**
+A: Not directly, but high-sugar diets spike insulin, which can increase oil production. A balanced diet helps manage flare-ups.
+
+**Q: How long does it take to see results?**
+A: Skin cells take about 28 days to renew. You must stick to a routine for at least 6–8 weeks before seeing a significant change.
+
+**Q: Can I use "Mekako" or other lightening soaps for acne?**
+A: **No.** Many of these contain harsh chemicals or steroids that thin the skin and lead to "rebound acne" and permanent damage.
+
+## When to See a Professional
+If your acne is painful, causing scars, or affecting your confidence, it's time for a clinical assessment. 
+
+**Ready for clear skin?**
+At **BeHealth Kenya**, I provide personalized skin consultations via WhatsApp. We analyze your skin type and recommend a routine using products available right here in Kenya.
+
+[Book Your Skin Consultation via WhatsApp]
+    `
+},
   {
     slug: "bad-breath-halitosis-causes-solutions",
     title: "Bad Breath (Halitosis): Common Causes & Solutions That Actually Work",
