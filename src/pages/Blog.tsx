@@ -34,6 +34,7 @@ Acne is the most treated skin condition in Kenya, affecting everyone from teenag
 As a clinician, I see many patients who have damaged their skin barrier with harsh "bleaching" soaps or DIY remedies. This guide breaks down what actually works for our climate and skin types.
 
 ## Why is Acne So Common in Kenya?
+
 Beyond genetics, several local factors trigger breakouts:
 * **Environmental Pollution:** Dust and exhaust fumes in urban areas clog pores.
 * **The Equatorial Sun:** High UV levels can darken acne scars, leading to persistent "dark spots" or Hyperpigmentation.
