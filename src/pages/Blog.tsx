@@ -23,7 +23,7 @@ const blogPosts: BlogPost[] = [
     slug: "acne-treatment-kenya-causes-solutions",
     title: "Acne Treatment in Kenya: The Clinician’s Guide to Clear Skin",
     excerpt: "Struggling with breakouts? From Nairobi's dust to hormonal shifts, discover why acne is common in Kenya and the clinically proven treatments to fix it.",
-    coverImage: "/images/blog/kenya-dermatology-acne.jpg",
+    coverImage: "/images/products/skincare-kit.jpg",
     author: "Lewis Muli Keli",
     category: "Dermatology",
     tags: ["Acne Kenya", "Skincare Routine", "Clinical Dermatology", "Nairobi Health"],
