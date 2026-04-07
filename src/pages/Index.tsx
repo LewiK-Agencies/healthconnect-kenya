@@ -6,6 +6,7 @@ import ServicesOverview from "@/components/home/ServicesOverview";
 import HowItWorks from "@/components/home/HowItWorks";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import Testimonials from "@/components/home/Testimonials";
+import BlogPreview from "@/components/home/BlogPreview";
 import CTASection from "@/components/home/CTASection";
 
 const Index = () => {
