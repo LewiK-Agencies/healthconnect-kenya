@@ -43,43 +43,30 @@ const BookingPayment = () => {
       return;
     }
 
-    // Load PayHero SDK
-    const existingScript = document.querySelector('script[src*="payhero"]');
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.src = "https://js.payhero.co.ke/lipwa.js";
-      script.async = true;
-      document.head.appendChild(script);
-      script.onload = () => initPayHero();
-    } else {
-      initPayHero();
-    }
+    const baseUrl = window.location.origin;
 
-    function initPayHero() {
-      const timer = setTimeout(() => {
-        if (window.PayHero && containerRef.current) {
-          const baseUrl = window.location.origin;
-          window.PayHero.init({
-            paymentUrl: PAYHERO_PAYMENT_URL,
-            width: "100%",
-            height: "100%",
-            containerId: "payHeroContainer",
-            channelID: PAYHERO_CHANNEL_ID,
-            amount: state!.fee,
-            phone: state!.phone,
-            name: state!.patientName,
-            reference: state!.opdNumber,
-            buttonName: `Pay KES ${state!.fee} Now`,
-            buttonColor: "hsl(195, 85%, 32%)",
-            successUrl: `${baseUrl}/booking-success`,
-            failedUrl: `${baseUrl}/services`,
-            callbackUrl: null,
-          });
-          setInitializing(false);
-        }
-      }, 800);
-      return () => clearTimeout(timer);
-    }
+    // Small delay to ensure SDK + container are ready
+    const timer = setTimeout(() => {
+      if (window.PayHero && containerRef.current) {
+        window.PayHero.init({
+          paymentUrl: PAYHERO_PAYMENT_URL,
+          width: "100%",
+          height: "100%",
+          containerId: "payHeroContainer",
+          channelID: PAYHERO_CHANNEL_ID,
+          amount: state.fee,
+          phone: state.phone,
+          name: state.patientName,
+          reference: state.opdNumber,
+          buttonName: `Pay KES ${state.fee} Now`,
+          buttonColor: "hsl(195, 85%, 32%)",
+          successUrl: `${baseUrl}/booking-success`,
+          failedUrl: `${baseUrl}/services`,
+          callbackUrl: null,
+        });
+        setInitializing(false);
+      }
+    }, 500);
 
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.paymentSuccess) {
@@ -88,7 +75,10 @@ const BookingPayment = () => {
     };
 
     window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("message", handleMessage);
+    };
   }, [state, navigate]);
 
   if (!state) return null;
