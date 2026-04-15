@@ -1,100 +1,36 @@
+import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
+import BookingForm from "@/components/booking/BookingForm";
 import { Button } from "@/components/ui/button";
-import { Phone, Check, CreditCard } from "lucide-react";
+import { Check, CreditCard, CalendarDays } from "lucide-react";
+
+const SERVICE_VALUE_MAP: Record<string, string> = {
+  "General Consultation": "dermatology",
+  "Dermatology Consultation": "dermatology",
+  "Reproductive Health": "reproductive",
+  "Dental Health": "dental",
+  "Mental Health Session": "stress",
+  "Nutrition Follow-up": "meal-plans",
+};
 
 const Pricing = () => {
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState("");
+
   const plans = [
-    {
-      name: "General Consultation",
-      price: 299,
-      description: "Basic health consultation for common ailments and general medical advice",
-      features: [
-        "WhatsApp consultation",
-        "Health assessment",
-        "Treatment recommendations",
-        "Follow-up advice",
-      ],
-      provider: "Dr. Lewis or Dr. Faith",
-      popular: false,
-    },
-    {
-      name: "Dermatology Consultation",
-      price: 299,
-      description: "Specialized skin assessment, diagnosis, and personalized treatment plan",
-      features: [
-        "Photo-based diagnosis",
-        "Personalized treatment plan",
-        "Medication recommendations",
-        "Skin care routine advice",
-        "Follow-up included",
-      ],
-      provider: "Dr. Lewis",
-      popular: true,
-    },
-    {
-      name: "Reproductive Health",
-      price: 299,
-      description: "Confidential sexual and reproductive health consultation with complete privacy",
-      features: [
-        "Private consultation",
-        "STI guidance",
-        "Family planning advice",
-        "Treatment recommendations",
-        "Complete confidentiality",
-      ],
-      provider: "Dr. Lewis",
-      popular: false,
-    },
-    {
-      name: "Dental Health",
-      price: 299,
-      description: "Expert dental consultation for bad breath, oral hygiene, and gum health",
-      features: [
-        "Bad breath assessment",
-        "Oral hygiene guidance",
-        "Gum care recommendations",
-        "Treatment plan",
-        "Follow-up advice",
-      ],
-      provider: "Dr. Lewis",
-      popular: false,
-    },
-    {
-      name: "Mental Health Session",
-      price: 399,
-      description: "Professional counseling for stress, anxiety, depression, and emotional wellness",
-      features: [
-        "45-min session",
-        "Stress & anxiety support",
-        "Depression counseling",
-        "Relationship guidance",
-        "Coping strategies",
-        "Follow-up scheduling",
-      ],
-      provider: "Dr. Faith",
-      popular: true,
-    },
-    {
-      name: "Nutrition Follow-up",
-      price: 299,
-      description: "Progress review and plan adjustments for existing nutrition clients",
-      features: [
-        "Progress review",
-        "Plan adjustments",
-        "Q&A session",
-        "Ongoing support",
-      ],
-      provider: "Dr. Faith",
-      popular: false,
-    },
+    { name: "General Consultation", price: 299, description: "Basic health consultation for common ailments and general medical advice", features: ["WhatsApp consultation", "Health assessment", "Treatment recommendations", "Follow-up advice"], provider: "Dr. Lewis or Dr. Faith", popular: false },
+    { name: "Dermatology Consultation", price: 299, description: "Specialized skin assessment, diagnosis, and personalized treatment plan", features: ["Photo-based diagnosis", "Personalized treatment plan", "Medication recommendations", "Skin care routine advice", "Follow-up included"], provider: "Dr. Lewis", popular: true },
+    { name: "Reproductive Health", price: 299, description: "Confidential sexual and reproductive health consultation with complete privacy", features: ["Private consultation", "STI guidance", "Family planning advice", "Treatment recommendations", "Complete confidentiality"], provider: "Dr. Lewis", popular: false },
+    { name: "Dental Health", price: 299, description: "Expert dental consultation for bad breath, oral hygiene, and gum health", features: ["Bad breath assessment", "Oral hygiene guidance", "Gum care recommendations", "Treatment plan", "Follow-up advice"], provider: "Dr. Lewis", popular: false },
+    { name: "Mental Health Session", price: 399, description: "Professional counseling for stress, anxiety, depression, and emotional wellness", features: ["45-min session", "Stress & anxiety support", "Depression counseling", "Relationship guidance", "Coping strategies", "Follow-up scheduling"], provider: "Dr. Faith", popular: true },
+    { name: "Nutrition Follow-up", price: 299, description: "Progress review and plan adjustments for existing nutrition clients", features: ["Progress review", "Plan adjustments", "Q&A session", "Ongoing support"], provider: "Dr. Faith", popular: false },
   ];
 
-  const getWhatsAppNumber = (provider: string) => {
-    if (provider === "Dr. Faith") return "254769284070";
-    if (provider === "Dr. Lewis") return "254790425578";
-    return "254790425578";
+  const openBooking = (planName: string) => {
+    setSelectedService(SERVICE_VALUE_MAP[planName] || "");
+    setBookingOpen(true);
   };
 
   return (
@@ -104,12 +40,8 @@ const Pricing = () => {
         {/* Hero */}
         <section className="bg-gradient-sky py-20 md:py-28">
           <div className="container mx-auto px-4 text-center">
-            <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">
-              Pricing
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Transparent, Affordable Pricing
-            </h1>
+            <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">Pricing</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">Transparent, Affordable Pricing</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Quality healthcare shouldn't break the bank. Our consultation fees are designed to be accessible to all Kenyans.
             </p>
@@ -132,7 +64,6 @@ const Pricing = () => {
                       Most Popular
                     </span>
                   )}
-
                   <div className="text-center mb-6">
                     <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
                     <p className="text-muted-foreground text-sm mb-4">{plan.description}</p>
@@ -141,7 +72,6 @@ const Pricing = () => {
                       <span className="text-muted-foreground">/session</span>
                     </div>
                   </div>
-
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
@@ -150,26 +80,19 @@ const Pricing = () => {
                       </li>
                     ))}
                   </ul>
-
                   <div className="text-center mb-4">
                     <span className="text-xs text-muted-foreground">
                       Provider: <span className="font-medium text-foreground">{plan.provider}</span>
                     </span>
                   </div>
-
-                  <a
-                    href={`https://wa.me/${getWhatsAppNumber(plan.provider)}?text=${encodeURIComponent(`Hi, I'd like to book a ${plan.name} (Ksh ${plan.price})`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Button
+                    variant={plan.popular ? "hero" : "outline"}
+                    className="w-full gap-2"
+                    onClick={() => openBooking(plan.name)}
                   >
-                    <Button
-                      variant={plan.popular ? "whatsapp" : "outline"}
-                      className="w-full gap-2"
-                    >
-                      <Phone className="w-4 h-4" />
-                      Book Now
-                    </Button>
-                  </a>
+                    <CalendarDays className="w-4 h-4" />
+                    Book Now
+                  </Button>
                 </div>
               ))}
             </div>
@@ -183,13 +106,10 @@ const Pricing = () => {
               <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
                 <CreditCard className="w-8 h-8 text-primary" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                Payment via I&M Bank
-              </h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Payment via I&M Bank</h2>
               <p className="text-muted-foreground mb-8">
                 Make your payment easily and securely via M-Pesa. After payment, send your confirmation to WhatsApp to proceed with your consultation.
               </p>
-
               <div className="bg-card rounded-2xl p-8 border border-border shadow-lg">
                 <p className="text-lg text-foreground mb-2">M-Pesa PayBill Number</p>
                 <p className="text-5xl font-bold text-primary mb-2">542542</p>
@@ -205,6 +125,7 @@ const Pricing = () => {
       </main>
       <Footer />
       <WhatsAppFloat />
+      <BookingForm open={bookingOpen} onOpenChange={setBookingOpen} preselectedService={selectedService} />
     </div>
   );
 };
