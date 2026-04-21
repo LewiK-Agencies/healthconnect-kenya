@@ -178,7 +178,24 @@ export const getCityTestimonials = (city: Location) => {
 };
 
 // ---------------- FAQs ----------------
-const faqPool = [
+// Delivery & prescription FAQs are pinned to every city — these are the most
+// common questions after WhatsApp confirmation.
+const pinnedDeliveryFaqs = [
+  (c: string) => ({
+    q: `How long does wellness shop delivery take in ${c} after WhatsApp confirmation?`,
+    a: `Once your order is confirmed on WhatsApp and payment to I&M PayBill 542542 (Acct 38549) is received, ${c} deliveries are dispatched the same working day. Most parcels reach ${c} within 24 hours, with same-day arrival for orders confirmed before 1 pm Monday–Saturday.`,
+  }),
+  (c: string) => ({
+    q: `How quickly will I receive my prescription after the consultation?`,
+    a: `Your digital prescription is sent on WhatsApp within 30 minutes of the consultation ending. You can fill it at any registered pharmacy in ${c} or request M-Pesa pharmacy delivery directly through us — typically delivered the same day.`,
+  }),
+  (c: string) => ({
+    q: `Can I get same-day pharmacy delivery to ${c}?`,
+    a: `Yes. For ${c} addresses, prescriptions and supplements confirmed and paid for before 3 pm are delivered the same day. Late orders arrive the next morning. Delivery fees depend on the courier zone and are quoted on WhatsApp before dispatch.`,
+  }),
+];
+
+const generalFaqPool = [
   (c: string) => ({
     q: `How do I book an online doctor consultation in ${c}?`,
     a: `Click "Book Consultation", choose a service, pick a 30-minute slot and pay via M-Pesa. Your licensed clinician will meet you on WhatsApp at the scheduled time — no commute from ${c} required.`,
@@ -186,10 +203,6 @@ const faqPool = [
   (c: string) => ({
     q: `Are online prescriptions from HealthConnect Kenya valid in ${c}?`,
     a: `Yes. All prescriptions are issued by clinicians licensed by the Kenya Medical Practitioners and Dentists Council, and accepted by registered pharmacies serving ${c} and the wider Nairobi metro.`,
-  }),
-  (c: string) => ({
-    q: `Can wellness shop products be delivered to ${c}?`,
-    a: `Absolutely. We offer M-Pesa pharmacy delivery for supplements, skincare, herbal remedies and dental kits to ${c}, usually within 24 hours of confirmed payment.`,
   }),
   (c: string) => ({
     q: `What does an online consultation cost in ${c}?`,
@@ -213,21 +226,17 @@ const faqPool = [
   }),
 ];
 
-export const getCityFaqs = (city: Location) => {
-  const seed = hash(city.slug + "faq");
-  const result: ReturnType<(typeof faqPool)[number]>[] = [];
-  const used = new Set<number>();
-  for (let i = 0; result.length < 6; i++) {
-    const idx = (seed + i) % faqPool.length;
-    if (used.has(idx)) continue;
-    used.add(idx);
-    result.push(faqPool[idx](city.name));
-  }
-  return result;
+// ---------------- Module-level cache ----------------
+// City content is deterministic per slug, so we memoize once per session.
+// Repeat visits to the same city skip all template work and string ops.
+type CityBundle = {
+  seo: ReturnType<typeof buildSEO>;
+  testimonials: ReturnType<typeof buildTestimonials>;
+  faqs: ReturnType<typeof buildFaqs>;
 };
+const cityCache = new Map<string, CityBundle>();
 
-// ---------------- Public API ----------------
-export const getCitySEO = (city: Location) => {
+function buildSEO(city: Location) {
   const seed = hash(city.slug);
   return {
     title: pick(titleTemplates, seed)(city.name).slice(0, 60),
@@ -237,4 +246,50 @@ export const getCitySEO = (city: Location) => {
     insightsH2: pick(insightsH2s, seed)(city.name),
     insightHook: pick(insightHooks, seed)(city.name),
   };
-};
+}
+
+function buildTestimonials(city: Location) {
+  const seed = hash(city.slug);
+  const used = new Set<number>();
+  const result: ReturnType<(typeof testimonialPool)[number]>[] = [];
+  for (let i = 0; result.length < 4; i++) {
+    const idx = (seed + i) % testimonialPool.length;
+    if (used.has(idx)) continue;
+    used.add(idx);
+    result.push(testimonialPool[idx](city.name));
+  }
+  return result;
+}
+
+function buildFaqs(city: Location) {
+  const seed = hash(city.slug + "faq");
+  // Pin the 3 delivery/prescription FAQs first, then 3 rotating general ones.
+  const pinned = pinnedDeliveryFaqs.map((fn) => fn(city.name));
+  const used = new Set<number>();
+  const rotated: ReturnType<(typeof generalFaqPool)[number]>[] = [];
+  for (let i = 0; rotated.length < 3; i++) {
+    const idx = (seed + i) % generalFaqPool.length;
+    if (used.has(idx)) continue;
+    used.add(idx);
+    rotated.push(generalFaqPool[idx](city.name));
+  }
+  return [...pinned, ...rotated];
+}
+
+function getBundle(city: Location): CityBundle {
+  const cached = cityCache.get(city.slug);
+  if (cached) return cached;
+  const bundle: CityBundle = {
+    seo: buildSEO(city),
+    testimonials: buildTestimonials(city),
+    faqs: buildFaqs(city),
+  };
+  cityCache.set(city.slug, bundle);
+  return bundle;
+}
+
+// ---------------- Public API ----------------
+export const getCitySEO = (city: Location) => getBundle(city).seo;
+export const getCityTestimonials = (city: Location) => getBundle(city).testimonials;
+export const getCityFaqs = (city: Location) => getBundle(city).faqs;
+
