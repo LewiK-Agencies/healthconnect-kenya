@@ -7,14 +7,14 @@ import { Phone, Clock, MapPin, AlertTriangle, MessageCircle, CreditCard } from "
 const Contact = () => {
   const contacts = [
     {
-      name: "Dr. Lewis",
+      name: "Clinician",
       role: "Clinician",
       specialization: "Dermatology, Reproductive Health & Dental Care",
       phone: "254790425578",
       displayPhone: "+254 790 425 578",
     },
     {
-      name: "Dr. Faith",
+      name: "Nutritionist",
       role: "Nutritionist & Mental Health Counselor",
       specialization: "Nutrition & Mental Wellness",
       phone: "254769284070",

@@ -7,7 +7,7 @@ import { Target, Eye, Shield, Heart, Phone, Stethoscope, Apple } from "lucide-re
 const About = () => {
   const team = [
     {
-      name: "Dr. Lewis",
+      name: "Clinician",
       role: "Clinician",
       specialization: "Dermatology & Reproductive Health",
       description: "Licensed clinician with extensive experience in dermatology consultations and reproductive health care. Committed to providing confidential, professional healthcare via WhatsApp.",
@@ -16,7 +16,7 @@ const About = () => {
       color: "bg-primary/10 text-primary",
     },
     {
-      name: "Dr. Faith",
+      name: "Nutritionist",
       role: "Nutritionist & Mental Health Counselor",
       specialization: "Nutrition & Mental Wellness",
       description: "Certified nutritionist and mental health counselor passionate about helping clients achieve optimal health through personalized nutrition plans and emotional support.",

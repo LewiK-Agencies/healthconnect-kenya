@@ -84,7 +84,7 @@ const Footer = () => {
                   className="flex items-center gap-2 text-background/70 hover:text-primary transition-colors text-sm"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>Dr. Lewis: +254 790 425 578</span>
+                  <span>Clinician: +254 790 425 578</span>
                 </a>
               </li>
               <li>
@@ -95,7 +95,7 @@ const Footer = () => {
                   className="flex items-center gap-2 text-background/70 hover:text-primary transition-colors text-sm"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>Dr. Faith: +254 769 284 070</span>
+                  <span>Nutritionist: +254 769 284 070</span>
                 </a>
               </li>
               <li className="flex items-center gap-2 text-background/70 text-sm">

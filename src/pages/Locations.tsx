@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
-import { MapPin, ArrowRight, Search, Stethoscope } from "lucide-react";
+import { MapPin, ArrowRight, Search, Stethoscope, Star, ListTree } from "lucide-react";
 import { useMemo, useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { locationRegions, allLocations } from "@/data/locations";
+import { locationRegions, allLocations, findLocationBySlug } from "@/data/locations";
+import { featuredCitySlugs } from "@/data/locationContent";
 
 const Locations = () => {
   const [query, setQuery] = useState("");
@@ -54,8 +55,48 @@ const Locations = () => {
               />
             </div>
             <p className="text-xs text-muted-foreground mt-3">
-              {allLocations.length}+ locations served countrywide
+              {allLocations.length}+ locations served countrywide ·{" "}
+              <Link
+                to="/locations-sitemap"
+                className="text-primary hover:underline inline-flex items-center gap-1"
+              >
+                <ListTree className="w-3 h-3" /> Full sitemap
+              </Link>
             </p>
+          </div>
+        </section>
+
+        {/* Featured cities — high-priority internal linking for SEO */}
+        <section className="py-12 md:py-16 bg-background border-b border-border">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="flex items-center gap-2 mb-6">
+              <Star className="w-5 h-5 text-amber fill-amber" />
+              <h2 className="text-xl md:text-2xl font-bold text-foreground">
+                Most Booked Locations
+              </h2>
+            </div>
+            <p className="text-muted-foreground mb-6 max-w-2xl">
+              Explore our most-visited online clinic landing pages — covering
+              Nairobi suburbs, major Kenyan towns and coastal cities.
+            </p>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {featuredCitySlugs
+                .map((slug) => findLocationBySlug(slug))
+                .filter((l): l is NonNullable<typeof l> => Boolean(l))
+                .map((loc) => (
+                  <Link
+                    key={loc.slug}
+                    to={`/locations/${loc.slug}`}
+                    className="group flex items-center justify-between gap-3 px-5 py-4 rounded-xl bg-gradient-to-br from-primary/5 to-secondary/30 border border-primary/20 hover:border-primary hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                  >
+                    <span className="flex items-center gap-2 text-foreground font-semibold">
+                      <MapPin className="w-4 h-4 text-primary" />
+                      Online Clinic in {loc.name}
+                    </span>
+                    <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-all" />
+                  </Link>
+                ))}
+            </div>
           </div>
         </section>
 
