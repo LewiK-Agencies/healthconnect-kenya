@@ -109,33 +109,6 @@ const featuredProducts = [
   },
 ];
 
-// Provider profiles used for the tailored CTA panel.
-const PROVIDERS = {
-  clinician: {
-    role: "Clinician",
-    summary:
-      "Licensed clinician handling skin, reproductive & sexual health, dental concerns and chronic illness follow-ups.",
-    specialties: [
-      "Dermatology & Acne",
-      "Reproductive & Sexual Health",
-      "Dental & Bad Breath",
-      "Chronic Illness Management",
-    ],
-    phone: "254790425578",
-  },
-  nutritionist: {
-    role: "Nutritionist & Mental Wellness Counselor",
-    summary:
-      "Personalised meal plans, weight & diabetes nutrition, plus confidential mental wellness sessions.",
-    specialties: [
-      "Meal Plans & Diet Coaching",
-      "Diabetes & Hypertension Nutrition",
-      "Stress & Anxiety Support",
-      "Pre/Postnatal Nutrition",
-    ],
-    phone: "254769284070",
-  },
-};
 
 const LocationPage = () => {
   const { city } = useParams<{ city: string }>();
