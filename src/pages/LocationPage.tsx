@@ -14,6 +14,32 @@ import {
   Smile,
   Star,
   Lightbulb,
+  ChevronLeft,
+  ChevronRight,
+  HelpCircle,
+} from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import ProviderCTA from "@/components/locations/ProviderCTA";
+import { findLocationBySlug, allLocations } from "@/data/locations";
+import {
+  getCitySEO,
+  getCityTestimonials,
+  getCityFaqs,
+  getCityServiceFocus,
+  featuredCitySlugs,
+} from "@/data/locationContent";
+
+// (Imports above replace the original block — sentinel marker)
+const __MARKER__ = true;
   Phone,
   ChevronLeft,
   ChevronRight,
