@@ -18,6 +18,8 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BookingPayment from "./pages/BookingPayment";
 import BookingSuccess from "./pages/BookingSuccess";
+import Locations from "./pages/Locations";
+import LocationPage from "./pages/LocationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +42,8 @@ const App = () => (
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/booking-payment" element={<BookingPayment />} />
           <Route path="/booking-success" element={<BookingSuccess />} />
+          <Route path="/locations" element={<Locations />} />
+          <Route path="/locations/:city" element={<LocationPage />} />
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
