@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import {
   MapPin,
@@ -14,12 +14,29 @@ import {
   Smile,
   Star,
   Lightbulb,
+  Phone,
+  ChevronLeft,
+  ChevronRight,
+  HelpCircle,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Button } from "@/components/ui/button";
-import { findLocationBySlug } from "@/data/locations";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { findLocationBySlug, allLocations } from "@/data/locations";
+import {
+  getCitySEO,
+  getCityTestimonials,
+  getCityFaqs,
+  getCityServiceFocus,
+  featuredCitySlugs,
+} from "@/data/locationContent";
 
 const consultationServices = [
   {
@@ -91,6 +108,34 @@ const featuredProducts = [
   },
 ];
 
+// Provider profiles used for the tailored CTA panel.
+const PROVIDERS = {
+  clinician: {
+    role: "Clinician",
+    summary:
+      "Licensed clinician handling skin, reproductive & sexual health, dental concerns and chronic illness follow-ups.",
+    specialties: [
+      "Dermatology & Acne",
+      "Reproductive & Sexual Health",
+      "Dental & Bad Breath",
+      "Chronic Illness Management",
+    ],
+    phone: "254790425578",
+  },
+  nutritionist: {
+    role: "Nutritionist & Mental Wellness Counselor",
+    summary:
+      "Personalised meal plans, weight & diabetes nutrition, plus confidential mental wellness sessions.",
+    specialties: [
+      "Meal Plans & Diet Coaching",
+      "Diabetes & Hypertension Nutrition",
+      "Stress & Anxiety Support",
+      "Pre/Postnatal Nutrition",
+    ],
+    phone: "254769284070",
+  },
+};
+
 const LocationPage = () => {
   const { city } = useParams<{ city: string }>();
   const location = useMemo(
@@ -98,23 +143,58 @@ const LocationPage = () => {
     [city],
   );
 
+  const seo = useMemo(() => (location ? getCitySEO(location) : null), [location]);
+  const testimonials = useMemo(
+    () => (location ? getCityTestimonials(location) : []),
+    [location],
+  );
+  const faqs = useMemo(
+    () => (location ? getCityFaqs(location) : []),
+    [location],
+  );
+  const focus = location ? getCityServiceFocus(location.slug) : "mixed";
+
+  // Nearby cities for internal linking — pull other featured cities + 3 from
+  // the full list as fallback.
+  const nearbyCities = useMemo(() => {
+    if (!location) return [];
+    const others = allLocations.filter((l) => l.slug !== location.slug);
+    const featured = others.filter((l) => featuredCitySlugs.includes(l.slug));
+    const pool = (featured.length >= 6 ? featured : others).slice(0, 8);
+    return pool;
+  }, [location]);
+
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
+
+  // Auto-rotate testimonials every 6s.
+  useEffect(() => {
+    if (testimonials.length === 0) return;
+    const id = setInterval(
+      () => setTestimonialIdx((i) => (i + 1) % testimonials.length),
+      6000,
+    );
+    return () => clearInterval(id);
+  }, [testimonials.length]);
+
   // SEO: dynamic title, meta description, canonical
   useEffect(() => {
-    if (!location) return;
-    const title = `Online Clinic in ${location.name} | Telemedicine — HealthConnect Kenya`;
-    document.title = title.slice(0, 60);
+    if (!location || !seo) return;
+    document.title = seo.title;
 
-    const desc = `Book a virtual doctor consultation in ${location.name}. Affordable clinical care, online prescriptions & wellness shop delivery.`.slice(
-      0,
-      160,
+    const ensureMeta = (name: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute("name", name);
+        document.head.appendChild(el);
+      }
+      return el;
+    };
+    ensureMeta("description").setAttribute("content", seo.description);
+    ensureMeta("keywords").setAttribute(
+      "content",
+      `online clinic ${location.name}, telemedicine ${location.name}, virtual doctor ${location.name}, online prescriptions Kenya, M-Pesa pharmacy delivery, nutritionist meal plan, dental consultation Kenya`,
     );
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement("meta");
-      metaDesc.setAttribute("name", "description");
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.setAttribute("content", desc);
 
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
@@ -126,13 +206,16 @@ const LocationPage = () => {
       "href",
       `${window.location.origin}/locations/${location.slug}`,
     );
-  }, [location]);
+  }, [location, seo]);
 
-  if (!location) {
+  if (!location || !seo) {
     return <Navigate to="/locations" replace />;
   }
 
   const cityName = location.name;
+  const showClinician = focus !== "nutrition";
+  const showNutritionist = focus !== "clinical";
+  const activeTestimonial = testimonials[testimonialIdx];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -173,7 +256,6 @@ const LocationPage = () => {
               </Link>
             </div>
 
-            {/* Trust signals */}
             <div className="flex flex-wrap justify-center gap-6 mt-10 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-primary" />
@@ -200,7 +282,7 @@ const LocationPage = () => {
                   <Lightbulb className="w-6 h-6 text-primary" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Local Health Insights — {cityName}
+                  {seo.insightsH2}
                 </h2>
               </div>
               <p className="text-lg text-muted-foreground leading-relaxed mb-4">
@@ -210,25 +292,131 @@ const LocationPage = () => {
                 a clinician online today.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Whether you live in {cityName} or work nearby, our online clinic
-                offers convenient telemedicine appointments, family health
-                support, and wellness shop delivery to your doorstep. Get the
-                same standard of care as a private clinician home visit —
-                without the wait.
+                {seo.insightHook}
               </p>
             </div>
           </div>
         </section>
 
-        {/* Clinical Consultation Section */}
-        <section className="py-16 md:py-24 bg-background">
+        {/* Meet the team — tailored providers */}
+        <section className="py-16 md:py-20 bg-background">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="text-center max-w-2xl mx-auto mb-10">
+              <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">
+                Your {cityName} Care Team
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+                Speak to a Licensed Clinician for {cityName}
+              </h2>
+              <p className="text-muted-foreground">
+                Our most-booked providers for {cityName} patients — tap WhatsApp
+                to start a consultation now.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {showClinician && (
+                <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm flex flex-col">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Stethoscope className="w-7 h-7 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">
+                        {PROVIDERS.clinician.role}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Serving {cityName} & nearby
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    {PROVIDERS.clinician.summary}
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {PROVIDERS.clinician.specialties.map((s) => (
+                      <li
+                        key={s}
+                        className="flex items-center gap-2 text-sm text-foreground"
+                      >
+                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={`https://wa.me/${PROVIDERS.clinician.phone}?text=${encodeURIComponent(
+                      `Hello, I'm in ${cityName} and would like to book a consultation.`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto"
+                  >
+                    <Button variant="whatsapp" className="w-full gap-2">
+                      <Phone className="w-4 h-4" />
+                      WhatsApp the Clinician
+                    </Button>
+                  </a>
+                </div>
+              )}
+
+              {showNutritionist && (
+                <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm flex flex-col">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Apple className="w-7 h-7 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">
+                        {PROVIDERS.nutritionist.role}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Serving {cityName} & nearby
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    {PROVIDERS.nutritionist.summary}
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {PROVIDERS.nutritionist.specialties.map((s) => (
+                      <li
+                        key={s}
+                        className="flex items-center gap-2 text-sm text-foreground"
+                      >
+                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href={`https://wa.me/${PROVIDERS.nutritionist.phone}?text=${encodeURIComponent(
+                      `Hello, I'm in ${cityName} and would like to book a session.`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto"
+                  >
+                    <Button variant="whatsapp" className="w-full gap-2">
+                      <Phone className="w-4 h-4" />
+                      WhatsApp the Nutritionist
+                    </Button>
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Clinical Consultation */}
+        <section className="py-16 md:py-24 bg-secondary/20">
           <div className="container mx-auto px-4">
             <div className="text-center max-w-3xl mx-auto mb-14">
               <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">
                 Clinical Consultation
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Book a Virtual Doctor in {cityName}
+                {seo.consultH2}
               </h2>
               <p className="text-muted-foreground text-lg leading-relaxed">
                 Book clinical appointment online with licensed Kenyan
@@ -267,6 +455,83 @@ const LocationPage = () => {
           </div>
         </section>
 
+        {/* Local Testimonials Carousel */}
+        <section className="py-16 md:py-20 bg-background">
+          <div className="container mx-auto px-4 max-w-3xl">
+            <div className="text-center mb-10">
+              <span className="inline-block text-primary font-semibold text-xs uppercase tracking-widest mb-3">
+                {cityName} Patient Stories
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                What {cityName} Patients Say
+              </h2>
+            </div>
+
+            <div className="relative bg-card border border-border rounded-2xl p-8 md:p-10 shadow-sm">
+              <div className="flex items-center gap-1 mb-4">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 fill-amber-400 text-amber-400"
+                  />
+                ))}
+              </div>
+              <blockquote className="text-lg md:text-xl text-foreground leading-relaxed mb-5 min-h-[6rem]">
+                "{activeTestimonial?.quote}"
+              </blockquote>
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <div>
+                  <p className="font-semibold text-foreground">
+                    {activeTestimonial?.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {activeTestimonial?.service} · {cityName}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label="Previous testimonial"
+                    onClick={() =>
+                      setTestimonialIdx(
+                        (i) =>
+                          (i - 1 + testimonials.length) % testimonials.length,
+                      )
+                    }
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <div className="flex gap-1.5">
+                    {testimonials.map((_, i) => (
+                      <button
+                        key={i}
+                        aria-label={`Show testimonial ${i + 1}`}
+                        onClick={() => setTestimonialIdx(i)}
+                        className={`h-2 rounded-full transition-all ${
+                          i === testimonialIdx
+                            ? "w-6 bg-primary"
+                            : "w-2 bg-muted-foreground/30"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label="Next testimonial"
+                    onClick={() =>
+                      setTestimonialIdx((i) => (i + 1) % testimonials.length)
+                    }
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Wellness Shop Preview */}
         <section className="py-16 md:py-24 bg-secondary/20">
           <div className="container mx-auto px-4">
@@ -276,7 +541,7 @@ const LocationPage = () => {
                   Wellness Shop · {cityName}
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-                  Wellness Shop Delivery to {cityName}
+                  {seo.shopH2}
                 </h2>
                 <p className="text-muted-foreground text-lg">
                   Buy organic supplements Kenya, immunity boosters, herbal
@@ -321,7 +586,7 @@ const LocationPage = () => {
                       <span className="text-lg font-bold text-foreground">
                         Ksh {product.price.toLocaleString()}
                       </span>
-                      <Star className="w-4 h-4 fill-amber text-amber" />
+                      <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                     </div>
                   </div>
                 </Link>
@@ -329,6 +594,60 @@ const LocationPage = () => {
             </div>
           </div>
         </section>
+
+        {/* FAQ */}
+        <section className="py-16 md:py-20 bg-background">
+          <div className="container mx-auto px-4 max-w-3xl">
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 text-primary font-semibold text-xs uppercase tracking-widest mb-3">
+                <HelpCircle className="w-4 h-4" /> {cityName} FAQs
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+                Online Consultations & Delivery in {cityName}
+              </h2>
+              <p className="text-muted-foreground">
+                Common questions from {cityName} patients about telemedicine,
+                online prescriptions and wellness shop delivery.
+              </p>
+            </div>
+
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, idx) => (
+                <AccordionItem key={idx} value={`item-${idx}`}>
+                  <AccordionTrigger className="text-left text-base font-semibold text-foreground">
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground leading-relaxed">
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </section>
+
+        {/* Nearby cities — internal linking */}
+        {nearbyCities.length > 0 && (
+          <section className="py-12 bg-secondary/20 border-t border-border">
+            <div className="container mx-auto px-4 max-w-5xl">
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-5 text-center">
+                Also serving near {cityName}
+              </h2>
+              <div className="flex flex-wrap justify-center gap-2">
+                {nearbyCities.map((c) => (
+                  <Link
+                    key={c.slug}
+                    to={`/locations/${c.slug}`}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-card border border-border text-sm text-foreground hover:border-primary hover:text-primary transition-all"
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    {c.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Final CTA */}
         <section className="py-16 md:py-20 bg-gradient-to-br from-primary to-primary/80">
