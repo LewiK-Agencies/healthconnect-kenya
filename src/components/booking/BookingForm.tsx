@@ -200,13 +200,13 @@ const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProp
                   <SelectValue placeholder="Choose your consultation type..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <div className="px-2 py-1.5 text-xs font-semibold text-primary">Clinician — Clinician</div>
+                  <div className="px-2 py-1.5 text-xs font-semibold text-primary">Clinician</div>
                   {ALL_SERVICES.filter((s) => s.provider === "Clinician").map((s) => (
                     <SelectItem key={s.value} value={s.value}>
                       {s.label} — Ksh {s.fee}
                     </SelectItem>
                   ))}
-                  <div className="px-2 py-1.5 text-xs font-semibold text-green-600 mt-1">Nutritionist — Nutritionist</div>
+                  <div className="px-2 py-1.5 text-xs font-semibold text-green-600 mt-1">Nutritionist</div>
                   {ALL_SERVICES.filter((s) => s.provider === "Nutritionist").map((s) => (
                     <SelectItem key={s.value} value={s.value}>
                       {s.label} — Ksh {s.fee}
