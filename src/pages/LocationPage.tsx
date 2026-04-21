@@ -14,7 +14,6 @@ import {
   Smile,
   Star,
   Lightbulb,
-  Phone,
   ChevronLeft,
   ChevronRight,
   HelpCircle,
@@ -29,6 +28,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import ProviderCTA from "@/components/locations/ProviderCTA";
 import { findLocationBySlug, allLocations } from "@/data/locations";
 import {
   getCitySEO,
@@ -37,6 +37,7 @@ import {
   getCityServiceFocus,
   featuredCitySlugs,
 } from "@/data/locationContent";
+
 
 const consultationServices = [
   {
@@ -108,33 +109,6 @@ const featuredProducts = [
   },
 ];
 
-// Provider profiles used for the tailored CTA panel.
-const PROVIDERS = {
-  clinician: {
-    role: "Clinician",
-    summary:
-      "Licensed clinician handling skin, reproductive & sexual health, dental concerns and chronic illness follow-ups.",
-    specialties: [
-      "Dermatology & Acne",
-      "Reproductive & Sexual Health",
-      "Dental & Bad Breath",
-      "Chronic Illness Management",
-    ],
-    phone: "254790425578",
-  },
-  nutritionist: {
-    role: "Nutritionist & Mental Wellness Counselor",
-    summary:
-      "Personalised meal plans, weight & diabetes nutrition, plus confidential mental wellness sessions.",
-    specialties: [
-      "Meal Plans & Diet Coaching",
-      "Diabetes & Hypertension Nutrition",
-      "Stress & Anxiety Support",
-      "Pre/Postnatal Nutrition",
-    ],
-    phone: "254769284070",
-  },
-};
 
 const LocationPage = () => {
   const { city } = useParams<{ city: string }>();
@@ -213,8 +187,6 @@ const LocationPage = () => {
   }
 
   const cityName = location.name;
-  const showClinician = focus !== "nutrition";
-  const showNutritionist = focus !== "clinical";
   const activeTestimonial = testimonials[testimonialIdx];
 
   return (
@@ -314,97 +286,7 @@ const LocationPage = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {showClinician && (
-                <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm flex flex-col">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Stethoscope className="w-7 h-7 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-foreground">
-                        {PROVIDERS.clinician.role}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Serving {cityName} & nearby
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground mb-4">
-                    {PROVIDERS.clinician.summary}
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    {PROVIDERS.clinician.specialties.map((s) => (
-                      <li
-                        key={s}
-                        className="flex items-center gap-2 text-sm text-foreground"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={`https://wa.me/${PROVIDERS.clinician.phone}?text=${encodeURIComponent(
-                      `Hello, I'm in ${cityName} and would like to book a consultation.`,
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto"
-                  >
-                    <Button variant="whatsapp" className="w-full gap-2">
-                      <Phone className="w-4 h-4" />
-                      WhatsApp the Clinician
-                    </Button>
-                  </a>
-                </div>
-              )}
-
-              {showNutritionist && (
-                <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm flex flex-col">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Apple className="w-7 h-7 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-foreground">
-                        {PROVIDERS.nutritionist.role}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Serving {cityName} & nearby
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground mb-4">
-                    {PROVIDERS.nutritionist.summary}
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    {PROVIDERS.nutritionist.specialties.map((s) => (
-                      <li
-                        key={s}
-                        className="flex items-center gap-2 text-sm text-foreground"
-                      >
-                        <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={`https://wa.me/${PROVIDERS.nutritionist.phone}?text=${encodeURIComponent(
-                      `Hello, I'm in ${cityName} and would like to book a session.`,
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-auto"
-                  >
-                    <Button variant="whatsapp" className="w-full gap-2">
-                      <Phone className="w-4 h-4" />
-                      WhatsApp the Nutritionist
-                    </Button>
-                  </a>
-                </div>
-              )}
-            </div>
+            <ProviderCTA cityName={cityName} focus={focus} />
           </div>
         </section>
 
