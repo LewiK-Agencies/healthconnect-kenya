@@ -163,19 +163,7 @@ const testimonialPool = [
   }),
 ];
 
-export const getCityTestimonials = (city: Location) => {
-  const seed = hash(city.slug);
-  // 4 unique testimonials per city
-  const used = new Set<number>();
-  const result: ReturnType<(typeof testimonialPool)[number]>[] = [];
-  for (let i = 0; result.length < 4; i++) {
-    const idx = (seed + i) % testimonialPool.length;
-    if (used.has(idx)) continue;
-    used.add(idx);
-    result.push(testimonialPool[idx](city.name));
-  }
-  return result;
-};
+
 
 // ---------------- FAQs ----------------
 // Delivery & prescription FAQs are pinned to every city — these are the most
