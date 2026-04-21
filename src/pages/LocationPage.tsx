@@ -472,7 +472,7 @@ const LocationPage = () => {
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className="w-5 h-5 fill-amber-400 text-amber-400"
+                    className="w-5 h-5 fill-amber text-amber"
                   />
                 ))}
               </div>
@@ -586,7 +586,7 @@ const LocationPage = () => {
                       <span className="text-lg font-bold text-foreground">
                         Ksh {product.price.toLocaleString()}
                       </span>
-                      <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      <Star className="w-4 h-4 fill-amber text-amber" />
                     </div>
                   </div>
                 </Link>

@@ -20,6 +20,7 @@ import BookingPayment from "./pages/BookingPayment";
 import BookingSuccess from "./pages/BookingSuccess";
 import Locations from "./pages/Locations";
 import LocationPage from "./pages/LocationPage";
+import LocationsSitemap from "./pages/LocationsSitemap";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
           <Route path="/booking-payment" element={<BookingPayment />} />
           <Route path="/booking-success" element={<BookingSuccess />} />
           <Route path="/locations" element={<Locations />} />
+          <Route path="/locations-sitemap" element={<LocationsSitemap />} />
           <Route path="/locations/:city" element={<LocationPage />} />
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/privacy" element={<Privacy />} />
