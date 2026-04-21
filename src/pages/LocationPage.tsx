@@ -187,8 +187,6 @@ const LocationPage = () => {
   }
 
   const cityName = location.name;
-  const showClinician = focus !== "nutrition";
-  const showNutritionist = focus !== "clinical";
   const activeTestimonial = testimonials[testimonialIdx];
 
   return (
