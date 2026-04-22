@@ -65,7 +65,7 @@ const Pricing = () => {
                   <Button
                     variant={plan.popular ? "hero" : "outline"}
                     className="w-full gap-2"
-                    onClick={() => openBooking(plan.name)}
+                    onClick={() => open({ service: plan.serviceKey })}
                   >
                     <CalendarDays className="w-4 h-4" />
                     Book Now
@@ -102,7 +102,6 @@ const Pricing = () => {
       </main>
       <Footer />
       <WhatsAppFloat />
-      <BookingForm open={bookingOpen} onOpenChange={setBookingOpen} preselectedService={selectedService} />
     </div>
   );
 };
