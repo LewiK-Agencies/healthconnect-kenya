@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShoppingBag, Star, Phone, Search, SlidersHorizontal, X } from "lucide-react";
+import { useProducts, useProductCategories } from "@/data/contentStore";
 
 const categories = [
   "All",
