@@ -21,7 +21,9 @@ import BookingSuccess from "./pages/BookingSuccess";
 import Locations from "./pages/Locations";
 import LocationPage from "./pages/LocationPage";
 import LocationsSitemap from "./pages/LocationsSitemap";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import { BookingProvider } from "./components/booking/BookingProvider";
 
 const queryClient = new QueryClient();
 
