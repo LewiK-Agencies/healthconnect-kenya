@@ -1,9 +1,11 @@
-import { ArrowRight, Shield, Users, Wallet, Phone, ShoppingBag } from "lucide-react";
+import { ArrowRight, Shield, Users, Wallet, CalendarDays, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useBooking } from "@/components/booking/BookingProvider";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const Hero = () => {
+  const { open } = useBooking();
   const trustIndicators = [
     { icon: Shield, text: "100% Confidential" },
     { icon: Users, text: "Licensed Professionals" },
@@ -40,13 +42,11 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 pt-2">
-            <a href="https://wa.me/254790425578" target="_blank" rel="noopener noreferrer">
-              <Button variant="whatsapp" size="xl" className="w-full sm:w-auto">
-                <Phone className="w-5 h-5" />
-                Consult a Doctor
-                <ArrowRight className="w-5 h-5" />
-              </Button>
-            </a>
+            <Button variant="hero" size="xl" className="w-full sm:w-auto" onClick={() => open()}>
+              <CalendarDays className="w-5 h-5" />
+              Book Consultation
+              <ArrowRight className="w-5 h-5" />
+            </Button>
             <Link to="/shop">
               <Button size="xl" className="w-full sm:w-auto bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20">
                 <ShoppingBag className="w-5 h-5" />

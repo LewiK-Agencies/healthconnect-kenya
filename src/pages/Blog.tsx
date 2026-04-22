@@ -1,106 +1,20 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
-import { Calendar, ArrowRight, User, Tag } from "lucide-react";
+import { Calendar, ArrowRight, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-interface BlogPost {
-  slug: string;
-  title: string;
-  excerpt: string;
-  coverImage: string;
-  author: string;
-  category: string;
-  tags: string[];
-  publishedAt: string;
-  content: string;
-}
-
-const blogPosts: BlogPost[] = [
-    {
-
-    slug: "understanding-acne-causes-treatment",
-
-    title: "Understanding Acne: Causes, Types & Effective Treatment in Kenya",
-
-    excerpt: "Acne is the most common skin condition in Kenya. Learn what causes it, the different types, and clinically proven treatments to get clear skin fast.",
-
-    coverImage: "/images/products/skincare-kit.jpg",
-
-    author: "Lewis Muli Keli",
-
-    category: "Dermatology",
-
-    tags: ["acne", "skin care", "dermatology"],
-
-    publishedAt: "2026-03-25",
-
-    content: `Acne affects millions of Kenyans, from teenagers to adults in their 40s. It's caused by clogged pores, excess oil production, bacteria, and hormonal changes.\n\n## Types of Acne\n\nThere are several types: whiteheads, blackheads, papules, pustules, nodules, and cystic acne. Each requires a different treatment approach.\n\n## Treatment Options\n\nMild acne responds well to over-the-counter products containing salicylic acid or benzoyl peroxide. Moderate to severe acne may require prescription medications like retinoids or antibiotics.\n\n## When to See a Clinician\n\nIf over-the-counter treatments haven't worked after 8 weeks, or if you have painful cystic acne, consult a healthcare professional. At BeHealth Kenya, Lewis can assess your skin condition via WhatsApp and recommend the right treatment plan.\n\n## Prevention Tips\n\nWash your face twice daily, avoid touching your face, change pillowcases weekly, stay hydrated, and maintain a balanced diet low in processed sugars.`,
-
-  },
-  {
-    slug: "bad-breath-halitosis-causes-solutions",
-    title: "Bad Breath (Halitosis): Common Causes & Solutions That Actually Work",
-    excerpt: "Struggling with bad breath? Discover the medical causes of halitosis and proven solutions to freshen your breath permanently – not just temporarily.",
-    coverImage: "/images/products/dental-care.jpg",
-    author: "Lewis Muli Keli",
-    category: "Dental Health",
-    tags: ["bad breath", "halitosis", "dental care", "oral hygiene"],
-    publishedAt: "2026-03-18",
-    content: `Bad breath, medically known as halitosis, affects an estimated 25-30% of people worldwide. In Kenya, it's one of the most common but least discussed health concerns.\n\n## Common Causes\n\nPoor oral hygiene is the leading cause. Bacteria on the tongue, between teeth, and along the gum line break down food particles and release foul-smelling sulfur compounds.\n\n## Medical Causes\n\nGastric reflux (GERD), tonsil stones, dry mouth, sinus infections, diabetes, and liver or kidney problems can all cause persistent bad breath.\n\n## Effective Solutions\n\n1. Brush twice daily and floss once daily\n2. Clean your tongue with a tongue scraper\n3. Use antibacterial mouthwash\n4. Stay hydrated throughout the day\n5. Visit a dental professional for deep cleaning\n\n## Our Dental Kit\n\nOur Dental & Oral Hygiene Kit includes everything you need: antibacterial mouthwash, tongue scraper, therapeutic toothpaste, and a comprehensive oral health guide.`,
-  },
-  {
-    slug: "pregnancy-nutrition-guide-kenya",
-    title: "Essential Pregnancy Nutrition: A Complete Guide for Kenyan Mothers",
-    excerpt: "What to eat during pregnancy matters. This comprehensive guide covers the essential nutrients, meal plans, and supplements every expectant Kenyan mother needs.",
-    coverImage: "/images/products/prenatal-nutrition.jpg",
-    author: "Faith Mukai Masila",
-    category: "Nutrition",
-    tags: ["pregnancy", "nutrition", "prenatal", "maternal health"],
-    publishedAt: "2026-03-10",
-    content: `Proper nutrition during pregnancy is critical for both the mother's health and the baby's development. Many Kenyan women don't get adequate nutrients during this crucial period.\n\n## Key Nutrients\n\nFolic acid prevents neural tube defects and should be taken from conception through the first trimester. Iron supports increased blood volume and prevents anemia. Calcium builds the baby's bones and teeth.\n\n## Foods to Include\n\nLeafy greens (sukuma wiki, spinach), lean proteins, whole grains, fruits, dairy products, and legumes should form the foundation of a pregnancy diet.\n\n## Foods to Avoid\n\nRaw or undercooked meats, unpasteurized dairy, excessive caffeine, alcohol, and high-mercury fish should be avoided during pregnancy.\n\n## Meal Plan Tips\n\nEat small, frequent meals to manage nausea. Include a protein source at every meal. Stay hydrated with at least 8 glasses of water daily.\n\n## Our Prenatal Pack\n\nOur Prenatal Nutrition Pack contains all the essential vitamins and minerals recommended by nutritionists for a healthy pregnancy.`,
-  },
-  {
-    slug: "managing-stress-anxiety-kenya",
-    title: "Managing Stress & Anxiety: Practical Mental Health Tips for Kenyans",
-    excerpt: "Mental health matters. Learn practical, culturally relevant strategies to manage stress and anxiety in your daily life as a Kenyan.",
-    coverImage: "/images/products/stress-relief.jpg",
-    author: "Faith Mukai Masila",
-    category: "Mental Health",
-    tags: ["mental health", "stress", "anxiety", "wellness"],
-    publishedAt: "2026-03-02",
-    content: `Mental health challenges are increasingly common in Kenya, yet remain heavily stigmatized. Stress and anxiety affect work performance, relationships, and physical health.\n\n## Recognizing the Signs\n\nPersistent worry, difficulty sleeping, irritability, difficulty concentrating, physical tension, and changes in appetite are all signs of excessive stress or anxiety.\n\n## Practical Strategies\n\n1. Deep breathing exercises – 5 minutes daily can significantly reduce cortisol levels\n2. Regular physical activity – even a 30-minute walk helps\n3. Journaling – writing down worries helps process them\n4. Social connection – talk to trusted friends or family\n5. Limiting news and social media consumption\n\n## When to Seek Professional Help\n\nIf stress or anxiety is interfering with your daily life, relationships, or work for more than two weeks, consider speaking with a mental health professional.\n\n## Confidential Support\n\nAt BeHealth Kenya, Faith provides confidential mental health counseling via WhatsApp. No judgment, no stigma – just professional support when you need it.`,
-  },
-  {
-    slug: "diabetes-diet-management-tips",
-    title: "Diabetes Diet Management: What Every Kenyan Diabetic Should Know",
-    excerpt: "Living with diabetes? Learn how to manage blood sugar levels through proper diet, meal timing, and smart food choices tailored for the Kenyan lifestyle.",
-    coverImage: "/images/products/diabetic-guide.jpg",
-    author: "Faith Mukai Masila",
-    category: "Nutrition",
-    tags: ["diabetes", "diet", "nutrition", "chronic illness"],
-    publishedAt: "2026-02-20",
-    content: `Diabetes is one of the fastest-growing chronic conditions in Kenya. Proper diet management is the cornerstone of controlling blood sugar levels and preventing complications.\n\n## Understanding Glycemic Index\n\nFoods with a low glycemic index (GI) release sugar slowly into the bloodstream, preventing spikes. Choose brown rice over white, sweet potatoes over regular potatoes, and whole grain ugali.\n\n## Portion Control\n\nUse the plate method: half your plate with non-starchy vegetables, a quarter with lean protein, and a quarter with whole grains or starchy foods.\n\n## Meal Timing\n\nEat at regular intervals – every 3-4 hours. Skipping meals can cause dangerous blood sugar drops, while overeating causes spikes.\n\n## Kenyan-Friendly Meals\n\nGitheri with vegetables, grilled fish with steamed greens, bean stew with brown chapati, and fruit salads (avoiding very sweet fruits) are excellent diabetic-friendly meals.\n\n## Get Our Guide\n\nOur Diabetic-Friendly Meal Plan Guide contains 90+ recipes specifically designed for Kenyan diabetics with grocery lists and carb-counting tips.`,
-  },
-  {
-    slug: "baby-weaning-guide-first-foods",
-    title: "Baby Weaning Guide: Introducing First Foods Safely to Your Baby",
-    excerpt: "When and how to start weaning your baby? This evidence-based guide covers the right age, best first foods, allergen introduction, and common mistakes to avoid.",
-    coverImage: "/images/products/baby-weaning.jpg",
-    author: "Faith Mukai Masila",
-    category: "Nutrition",
-    tags: ["baby", "weaning", "infant nutrition", "parenting"],
-    publishedAt: "2026-02-10",
-    content: `The World Health Organization recommends exclusive breastfeeding for the first 6 months, followed by the gradual introduction of solid foods alongside continued breastfeeding.\n\n## Signs of Readiness\n\nYour baby is ready for solids when they can sit upright with support, have good head control, show interest in food, and have lost the tongue-thrust reflex.\n\n## Best First Foods\n\nStart with single-ingredient purees: sweet potato, avocado, banana, pumpkin, or well-cooked and mashed beans. Introduce one new food every 3 days to monitor for allergies.\n\n## Allergen Introduction\n\nResearch shows early introduction of common allergens (eggs, peanuts, dairy) between 6-12 months may actually reduce allergy risk. Always introduce in small amounts.\n\n## Common Mistakes\n\nAdding salt or sugar to baby food, starting too early (before 4 months), force-feeding, and not offering enough variety are common weaning mistakes.\n\n## Our Weaning Kit\n\nOur Baby Weaning Starter Kit includes age-appropriate feeding guides, nutrient-dense recipe cards, portion guides, and BPA-free feeding accessories.`,
-  },
-];
-
-const blogCategories = ["All", "Dermatology", "Dental Health", "Nutrition", "Mental Health"];
+import { useBlogArticles } from "@/data/contentStore";
 
 const Blog = () => {
+  const blogPosts = useBlogArticles();
   const [activeCategory, setActiveCategory] = useState("All");
+
+  const blogCategories = useMemo(
+    () => ["All", ...Array.from(new Set(blogPosts.map((p) => p.category)))],
+    [blogPosts],
+  );
 
   const filteredPosts = activeCategory === "All"
     ? blogPosts

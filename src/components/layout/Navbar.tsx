@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Heart } from "lucide-react";
+import { Menu, X, CalendarDays, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { open: openBooking } = useBooking();
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -55,12 +57,11 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-3">
-            <a href="https://wa.me/254790425578" target="_blank" rel="noopener noreferrer">
-              <Button variant="whatsapp" size="default" className="gap-2">
-                <Phone className="w-4 h-4" />
-                <span className="hidden xl:inline">Consult Now</span>
-              </Button>
-            </a>
+            <Button variant="hero" size="default" className="gap-2" onClick={() => openBooking()}>
+              <CalendarDays className="w-4 h-4" />
+              <span className="hidden xl:inline">Book Consultation</span>
+              <span className="xl:hidden">Book</span>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -91,17 +92,17 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
-              <a
-                href="https://wa.me/254790425578"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4"
+              <Button
+                variant="hero"
+                className="w-full gap-2 mt-4"
+                onClick={() => {
+                  setIsOpen(false);
+                  openBooking();
+                }}
               >
-                <Button variant="whatsapp" className="w-full gap-2">
-                  <Phone className="w-4 h-4" />
-                  Consult Now on WhatsApp
-                </Button>
-              </a>
+                <CalendarDays className="w-4 h-4" />
+                Book a Consultation
+              </Button>
             </div>
           </div>
         )}

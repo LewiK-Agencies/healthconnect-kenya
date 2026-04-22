@@ -2,9 +2,11 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Button } from "@/components/ui/button";
-import { ClipboardList, CreditCard, MessageCircle, Package, Phone, CheckCircle } from "lucide-react";
+import { ClipboardList, CreditCard, MessageCircle, Package, CalendarDays, CheckCircle } from "lucide-react";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 const HowItWorks = () => {
+  const { open } = useBooking();
   const consultationSteps = [
     {
       icon: ClipboardList,
@@ -109,18 +111,14 @@ const HowItWorks = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-14">
-              <a href="https://wa.me/254790425578" target="_blank" rel="noopener noreferrer">
-                <Button variant="whatsapp" size="lg" className="gap-2">
-                  <Phone className="w-5 h-5" />
-                  Consult the Clinician
-                </Button>
-              </a>
-              <a href="https://wa.me/254769284070" target="_blank" rel="noopener noreferrer">
-                <Button variant="whatsapp" size="lg" className="gap-2">
-                  <Phone className="w-5 h-5" />
-                  Consult the Nutritionist
-                </Button>
-              </a>
+              <Button variant="hero" size="lg" className="gap-2" onClick={() => open({ provider: "Clinician" })}>
+                <CalendarDays className="w-5 h-5" />
+                Consult the Clinician
+              </Button>
+              <Button variant="hero" size="lg" className="gap-2" onClick={() => open({ provider: "Nutritionist" })}>
+                <CalendarDays className="w-5 h-5" />
+                Consult the Nutritionist
+              </Button>
             </div>
           </div>
         </section>

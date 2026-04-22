@@ -30,31 +30,13 @@ import {
   FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useBookingServices } from "@/data/contentStore";
 
 interface BookingFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   preselectedService?: string;
 }
-
-const ALL_SERVICES = [
-  { value: "dermatology", label: "Dermatology Consultation", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "acne", label: "Acne & Skin Infections", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "fungal", label: "Fungal & Eczema Management", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "reproductive", label: "Reproductive Health", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "sexual-health", label: "Sexual Health & STIs", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "family-planning", label: "Family Planning Guidance", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "dental", label: "Dental Health & Bad Breath", fee: 299, provider: "Clinician", whatsapp: "254790425578" },
-  { value: "baby-nutrition", label: "Babies & Children Nutrition", fee: 299, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "prenatal", label: "Pregnant & Breastfeeding Mothers", fee: 299, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "elderly-nutrition", label: "Elderly Nutrition", fee: 299, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "meal-plans", label: "Meal Plans & Diet Coaching", fee: 299, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "diabetes-nutrition", label: "Diabetes & Hypertension Nutrition", fee: 299, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "weight", label: "Weight Management", fee: 299, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "stress", label: "Stress & Anxiety Support", fee: 399, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "relationship", label: "Relationship Counseling", fee: 399, provider: "Nutritionist", whatsapp: "254769284070" },
-  { value: "depression", label: "Depression Support", fee: 399, provider: "Nutritionist", whatsapp: "254769284070" },
-];
 
 const TIME_SLOTS = [
   "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
@@ -69,6 +51,7 @@ function generateOPD(): string {
 
 const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProps) => {
   const navigate = useNavigate();
+  const ALL_SERVICES = useBookingServices();
   const [step, setStep] = useState(1);
   const [service, setService] = useState(preselectedService || "");
   const [name, setName] = useState("");

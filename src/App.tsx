@@ -21,7 +21,9 @@ import BookingSuccess from "./pages/BookingSuccess";
 import Locations from "./pages/Locations";
 import LocationPage from "./pages/LocationPage";
 import LocationsSitemap from "./pages/LocationsSitemap";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import { BookingProvider } from "./components/booking/BookingProvider";
 
 const queryClient = new QueryClient();
 
@@ -31,27 +33,30 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/how-it-works" element={<HowItWorks />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/booking-payment" element={<BookingPayment />} />
-          <Route path="/booking-success" element={<BookingSuccess />} />
-          <Route path="/locations" element={<Locations />} />
-          <Route path="/locations-sitemap" element={<LocationsSitemap />} />
-          <Route path="/locations/:city" element={<LocationPage />} />
-          <Route path="/disclaimer" element={<Disclaimer />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/consent" element={<Consent />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <BookingProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/booking-payment" element={<BookingPayment />} />
+            <Route path="/booking-success" element={<BookingSuccess />} />
+            <Route path="/locations" element={<Locations />} />
+            <Route path="/locations-sitemap" element={<LocationsSitemap />} />
+            <Route path="/locations/:city" element={<LocationPage />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/disclaimer" element={<Disclaimer />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/consent" element={<Consent />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BookingProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
