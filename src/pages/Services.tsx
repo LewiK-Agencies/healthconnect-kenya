@@ -2,9 +2,9 @@ import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
-import BookingForm from "@/components/booking/BookingForm";
 import { Button } from "@/components/ui/button";
 import { Phone, Stethoscope, Heart, Shield, Sparkles, AlertCircle, Apple, Brain, Baby, Users, Calendar, Scale, HeartPulse, Smile, CalendarDays } from "lucide-react";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 const SERVICE_MAP: Record<string, string> = {
   "Dermatology Consultations": "dermatology",
@@ -26,12 +26,10 @@ const SERVICE_MAP: Record<string, string> = {
 };
 
 const Services = () => {
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
+  const { open } = useBooking();
 
   const openBooking = (serviceTitle: string) => {
-    setSelectedService(SERVICE_MAP[serviceTitle] || "");
-    setBookingOpen(true);
+    open({ service: SERVICE_MAP[serviceTitle] || "" });
   };
 
   const lewisServices = [
@@ -108,7 +106,7 @@ const Services = () => {
                   Specializing in dermatology, reproductive health, dental care, and clinical consultations with years of professional experience.
                 </p>
               </div>
-              <Button variant="whatsapp" size="lg" className="gap-2" onClick={() => { setSelectedService(""); setBookingOpen(true); }}>
+              <Button variant="hero" size="lg" className="gap-2" onClick={() => open({ provider: "Clinician" })}>
                 <CalendarDays className="w-5 h-5" />
                 Book a Consultation
               </Button>
@@ -140,7 +138,7 @@ const Services = () => {
                   Expert in nutrition counseling and mental health support for all life stages, from infancy to elderly care.
                 </p>
               </div>
-              <Button variant="whatsapp" size="lg" className="gap-2" onClick={() => { setSelectedService(""); setBookingOpen(true); }}>
+              <Button variant="hero" size="lg" className="gap-2" onClick={() => open({ provider: "Nutritionist" })}>
                 <CalendarDays className="w-5 h-5" />
                 Book a Consultation
               </Button>
@@ -156,7 +154,6 @@ const Services = () => {
       </main>
       <Footer />
       <WhatsAppFloat />
-      <BookingForm open={bookingOpen} onOpenChange={setBookingOpen} preselectedService={selectedService} />
     </div>
   );
 };
