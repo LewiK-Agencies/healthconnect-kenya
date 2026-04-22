@@ -1,37 +1,14 @@
-import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
-import BookingForm from "@/components/booking/BookingForm";
 import { Button } from "@/components/ui/button";
 import { Check, CreditCard, CalendarDays } from "lucide-react";
-
-const SERVICE_VALUE_MAP: Record<string, string> = {
-  "General Consultation": "dermatology",
-  "Dermatology Consultation": "dermatology",
-  "Reproductive Health": "reproductive",
-  "Dental Health": "dental",
-  "Mental Health Session": "stress",
-  "Nutrition Follow-up": "meal-plans",
-};
+import { useServicePlans } from "@/data/contentStore";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 const Pricing = () => {
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState("");
-
-  const plans = [
-    { name: "General Consultation", price: 299, description: "Basic health consultation for common ailments and general medical advice", features: ["WhatsApp consultation", "Health assessment", "Treatment recommendations", "Follow-up advice"], provider: "Clinician or Nutritionist", popular: false },
-    { name: "Dermatology Consultation", price: 299, description: "Specialized skin assessment, diagnosis, and personalized treatment plan", features: ["Photo-based diagnosis", "Personalized treatment plan", "Medication recommendations", "Skin care routine advice", "Follow-up included"], provider: "Clinician", popular: true },
-    { name: "Reproductive Health", price: 299, description: "Confidential sexual and reproductive health consultation with complete privacy", features: ["Private consultation", "STI guidance", "Family planning advice", "Treatment recommendations", "Complete confidentiality"], provider: "Clinician", popular: false },
-    { name: "Dental Health", price: 299, description: "Expert dental consultation for bad breath, oral hygiene, and gum health", features: ["Bad breath assessment", "Oral hygiene guidance", "Gum care recommendations", "Treatment plan", "Follow-up advice"], provider: "Clinician", popular: false },
-    { name: "Mental Health Session", price: 399, description: "Professional counseling for stress, anxiety, depression, and emotional wellness", features: ["45-min session", "Stress & anxiety support", "Depression counseling", "Relationship guidance", "Coping strategies", "Follow-up scheduling"], provider: "Nutritionist", popular: true },
-    { name: "Nutrition Follow-up", price: 299, description: "Progress review and plan adjustments for existing nutrition clients", features: ["Progress review", "Plan adjustments", "Q&A session", "Ongoing support"], provider: "Nutritionist", popular: false },
-  ];
-
-  const openBooking = (planName: string) => {
-    setSelectedService(SERVICE_VALUE_MAP[planName] || "");
-    setBookingOpen(true);
-  };
+  const { open } = useBooking();
+  const plans = useServicePlans();
 
   return (
     <div className="min-h-screen flex flex-col">
