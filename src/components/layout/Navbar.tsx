@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Heart } from "lucide-react";
+import { Menu, X, CalendarDays, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBooking } from "@/components/booking/BookingProvider";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { open: openBooking } = useBooking();
 
   const navLinks = [
     { href: "/", label: "Home" },
