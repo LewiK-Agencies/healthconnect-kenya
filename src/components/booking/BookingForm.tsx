@@ -51,6 +51,7 @@ function generateOPD(): string {
 
 const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProps) => {
   const navigate = useNavigate();
+  const ALL_SERVICES = useBookingServices();
   const [step, setStep] = useState(1);
   const [service, setService] = useState(preselectedService || "");
   const [name, setName] = useState("");
