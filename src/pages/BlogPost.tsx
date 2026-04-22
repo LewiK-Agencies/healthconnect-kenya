@@ -4,10 +4,11 @@ import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Calendar, User, ArrowLeft, Tag, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { blogPosts } from "./Blog"; // Ensure this path matches your file structure
+import { useBlogArticles } from "@/data/contentStore";
 
 const BlogPost = () => {
   const { slug } = useParams();
+  const blogPosts = useBlogArticles();
   const post = blogPosts.find((p) => p.slug === slug);
 
   // 1. Handle "Post Not Found" State
