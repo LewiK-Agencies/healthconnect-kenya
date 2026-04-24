@@ -33,6 +33,8 @@ export interface ShopProduct {
   description: string;
 }
 
+export type BlogStatus = "draft" | "scheduled" | "published";
+
 export interface BlogArticle {
   slug: string;
   title: string;
@@ -42,8 +44,11 @@ export interface BlogArticle {
   category: string;
   tags: string[];
   metaKeywords?: string;
+  /** ISO date (YYYY-MM-DD). For "scheduled" articles, this is the publish date. */
   publishedAt: string;
   content: string;
+  /** Defaults to "published" when missing (back-compat). */
+  status?: BlogStatus;
 }
 
 export interface CustomLocation {

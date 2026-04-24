@@ -16,6 +16,9 @@ import {
   Eye,
   EyeOff,
   Heart,
+  History,
+  BarChart3,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +43,8 @@ import {
   useProductCategories,
   useBlogArticles,
   useCustomLocations,
+  useAuditLog,
+  useAnalytics,
   setServicePlans,
   setBookingServices,
   setProducts,
@@ -49,6 +54,8 @@ import {
   exportAll,
   importAll,
   resetAll,
+  clearAuditLog,
+  clearAnalytics,
 } from "@/data/contentStore";
 import {
   slugifyName,
@@ -56,8 +63,10 @@ import {
   type ServiceItem,
   type ShopProduct,
   type BlogArticle,
+  type BlogStatus,
   type CustomLocation,
 } from "@/data/defaults";
+import { cn } from "@/lib/utils";
 
 // ============= LOGIN GATE =============
 const LoginGate = ({ onLogin }: { onLogin: (pw: string) => boolean }) => {
@@ -519,43 +528,81 @@ const BlogTab = () => {
     metaKeywords: "",
     publishedAt: new Date().toISOString().slice(0, 10),
     content: "## Heading\n\nWrite your article here.",
+    status: "draft",
   });
+
+  const quickPublish = (slug: string) => {
+    setBlogArticles(
+      articles.map((x) =>
+        x.slug === slug
+          ? { ...x, status: "published", publishedAt: new Date().toISOString().slice(0, 10) }
+          : x,
+      ),
+    );
+    toast({ title: "Article published" });
+  };
+
+  const quickUnpublish = (slug: string) => {
+    setBlogArticles(articles.map((x) => (x.slug === slug ? { ...x, status: "draft" } : x)));
+    toast({ title: "Article unpublished (now draft)" });
+  };
 
   if (editing) {
     return <ArticleEditor initial={editing} onCancel={() => setEditing(null)} onSave={save} />;
   }
+
+  const statusBadge = (a: BlogArticle) => {
+    const s = a.status ?? "published";
+    const isFuture =
+      s === "scheduled" && new Date(a.publishedAt + "T00:00:00").getTime() > Date.now();
+    if (s === "published") return <Badge className="bg-[hsl(var(--green))] text-background">Published</Badge>;
+    if (s === "scheduled" && isFuture) return <Badge className="bg-amber-500 text-background">Scheduled</Badge>;
+    if (s === "scheduled") return <Badge className="bg-[hsl(var(--green))] text-background">Live</Badge>;
+    return <Badge variant="outline">Draft</Badge>;
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold">Blog Articles</h2>
-          <p className="text-sm text-muted-foreground">{articles.length} articles</p>
+          <p className="text-sm text-muted-foreground">
+            {articles.length} total · Only Published / past-Scheduled appear on /blog
+          </p>
         </div>
         <Button size="sm" onClick={() => setEditing(newArticle())} className="gap-1">
           <Plus className="w-4 h-4" /> New Article
         </Button>
       </div>
       <div className="grid gap-3">
-        {articles.map((a) => (
-          <div key={a.slug} className="bg-card border border-border rounded-xl p-4 flex gap-4">
-            <img src={a.coverImage} alt="" className="w-20 h-20 rounded-lg object-cover bg-muted shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <Badge variant="outline" className="text-xs">{a.category}</Badge>
-                <span className="text-xs text-muted-foreground">{a.publishedAt}</span>
+        {articles.map((a) => {
+          const status = a.status ?? "published";
+          return (
+            <div key={a.slug} className="bg-card border border-border rounded-xl p-4 flex gap-4">
+              <img src={a.coverImage} alt="" className="w-20 h-20 rounded-lg object-cover bg-muted shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  {statusBadge(a)}
+                  <Badge variant="outline" className="text-xs">{a.category}</Badge>
+                  <span className="text-xs text-muted-foreground">{a.publishedAt}</span>
+                </div>
+                <h3 className="font-semibold truncate">{a.title}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-1">{a.excerpt}</p>
               </div>
-              <h3 className="font-semibold truncate">{a.title}</h3>
-              <p className="text-sm text-muted-foreground line-clamp-1">{a.excerpt}</p>
+              <div className="flex flex-col gap-2 shrink-0">
+                <Button size="sm" variant="outline" onClick={() => setEditing(a)}>Edit</Button>
+                {status !== "published" ? (
+                  <Button size="sm" variant="outline" onClick={() => quickPublish(a.slug)}>Publish</Button>
+                ) : (
+                  <Button size="sm" variant="outline" onClick={() => quickUnpublish(a.slug)}>Unpublish</Button>
+                )}
+                <Button size="sm" variant="outline" onClick={() => remove(a.slug)} className="text-destructive">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 shrink-0">
-              <Button size="sm" variant="outline" onClick={() => setEditing(a)}>Edit</Button>
-              <Button size="sm" variant="outline" onClick={() => remove(a.slug)} className="text-destructive">
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -600,7 +647,7 @@ const ArticleEditor = ({
           <Label className="text-xs">Excerpt</Label>
           <Textarea rows={2} value={a.excerpt} onChange={(e) => update({ excerpt: e.target.value })} />
         </div>
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
             <Label className="text-xs">Category</Label>
             <Input value={a.category} onChange={(e) => update({ category: e.target.value })} />
@@ -610,10 +657,29 @@ const ArticleEditor = ({
             <Input value={a.author} onChange={(e) => update({ author: e.target.value })} />
           </div>
           <div>
-            <Label className="text-xs">Published Date</Label>
+            <Label className="text-xs">Publish Date</Label>
             <Input type="date" value={a.publishedAt} onChange={(e) => update({ publishedAt: e.target.value })} />
           </div>
+          <div>
+            <Label className="text-xs">Status</Label>
+            <Select
+              value={a.status ?? "published"}
+              onValueChange={(v) => update({ status: v as BlogStatus })}
+            >
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft (hidden)</SelectItem>
+                <SelectItem value="scheduled">Scheduled (auto-publish on date)</SelectItem>
+                <SelectItem value="published">Published (live now)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+        {(a.status ?? "published") === "scheduled" && (
+          <p className="text-xs text-muted-foreground -mt-2">
+            Goes live automatically on <strong>{a.publishedAt}</strong>. Until then it stays hidden from /blog.
+          </p>
+        )}
         <div>
           <Label className="text-xs">Cover Image URL</Label>
           <Input value={a.coverImage} onChange={(e) => update({ coverImage: e.target.value })} />
@@ -631,6 +697,198 @@ const ArticleEditor = ({
           <Textarea rows={14} value={a.content} onChange={(e) => update({ content: e.target.value })} className="font-mono text-sm" />
         </div>
       </div>
+    </div>
+  );
+};
+
+// ============= AUDIT LOG TAB =============
+const AuditLogTab = () => {
+  const log = useAuditLog();
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<"all" | "price" | "service">("all");
+
+  const filtered = log.filter((e) => {
+    const matchesQuery = !query.trim() ||
+      e.target.toLowerCase().includes(query.toLowerCase()) ||
+      e.details.toLowerCase().includes(query.toLowerCase());
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "price" && (e.action === "price_changed" || e.action === "booking_fee_changed")) ||
+      (filter === "service" && (e.action === "plan_added" || e.action === "plan_removed" || e.action === "plan_renamed" || e.action === "booking_service_renamed"));
+    return matchesQuery && matchesFilter;
+  });
+
+  const clear = () => {
+    if (confirm("Clear the entire change history? This cannot be undone.")) {
+      clearAuditLog();
+      toast({ title: "Change history cleared" });
+    }
+  };
+
+  const actionLabel: Record<string, { label: string; tone: string }> = {
+    price_changed: { label: "Price changed", tone: "bg-amber-500" },
+    booking_fee_changed: { label: "Booking fee", tone: "bg-amber-500" },
+    plan_added: { label: "Plan added", tone: "bg-[hsl(var(--green))]" },
+    plan_removed: { label: "Plan removed", tone: "bg-destructive" },
+    plan_renamed: { label: "Plan renamed", tone: "bg-primary" },
+    booking_service_renamed: { label: "Service renamed", tone: "bg-primary" },
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold">Change History</h2>
+          <p className="text-sm text-muted-foreground">
+            Logged automatically when you edit pricing or add/remove services.
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={clear} className="text-destructive gap-1" disabled={log.length === 0}>
+          <Trash2 className="w-3.5 h-3.5" /> Clear log
+        </Button>
+      </div>
+
+      <div className="flex gap-2 flex-wrap">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search service or detail…" className="pl-9" />
+        </div>
+        <Select value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
+          <SelectTrigger className="w-[160px]"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All actions</SelectItem>
+            <SelectItem value="price">Price changes</SelectItem>
+            <SelectItem value="service">Service add/remove</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="bg-card border border-border rounded-xl p-10 text-center text-sm text-muted-foreground">
+          No changes recorded yet. Edit a price or add/remove a service to see entries here.
+        </div>
+      ) : (
+        <div className="bg-card border border-border rounded-xl divide-y divide-border">
+          {filtered.map((e) => {
+            const meta = actionLabel[e.action] ?? { label: e.action, tone: "bg-muted" };
+            return (
+              <div key={e.id} className="p-4 flex gap-3 items-start">
+                <span className={cn("inline-block w-2 h-2 rounded-full mt-2 shrink-0", meta.tone)} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">{meta.label}</Badge>
+                    <span className="text-xs text-muted-foreground">{new Date(e.at).toLocaleString("en-KE")}</span>
+                  </div>
+                  <p className="text-sm text-foreground">{e.details}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============= ANALYTICS TAB =============
+const AnalyticsTab = () => {
+  const a = useAnalytics();
+  const totalBookings = a.bookings.length;
+  const paidBookings = a.bookings.filter((b) => b.paid);
+  const revenue = paidBookings.reduce((sum, b) => sum + b.fee, 0);
+  const uniqueUsers = new Set(a.bookings.map((b) => b.phone)).size;
+
+  const last30 = a.bookings.filter(
+    (b) => Date.now() - new Date(b.at).getTime() < 30 * 24 * 60 * 60 * 1000,
+  );
+
+  const reset = () => {
+    if (confirm("Clear all analytics data? Visitors and booking history will be deleted.")) {
+      clearAnalytics();
+      toast({ title: "Analytics cleared" });
+    }
+  };
+
+  const stats = [
+    { label: "Total Visitors", value: a.uniqueVisitorIds.length, hint: "Unique browsers tracked" },
+    { label: "Page Views", value: a.pageViews, hint: "All pages combined" },
+    { label: "Bookings", value: totalBookings, hint: `${last30.length} in last 30 days` },
+    { label: "Paid Bookings", value: paidBookings.length, hint: `Ksh ${revenue.toLocaleString()} revenue` },
+    { label: "Registered Users", value: uniqueUsers, hint: "Unique phone numbers" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold">Analytics</h2>
+          <p className="text-sm text-muted-foreground">
+            Visitor and booking activity captured on this device.
+            <span className="block text-xs mt-1">
+              Note: stats are stored in the visitor's browser. For real cross-device analytics enable Lovable Cloud later.
+            </span>
+          </p>
+        </div>
+        <Button variant="outline" size="sm" onClick={reset} className="text-destructive gap-1">
+          <RotateCcw className="w-3.5 h-3.5" /> Reset stats
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-card border border-border rounded-xl p-4">
+            <p className="text-xs text-muted-foreground">{s.label}</p>
+            <p className="text-2xl font-bold text-foreground mt-1">{s.value}</p>
+            <p className="text-[10px] text-muted-foreground mt-1">{s.hint}</p>
+          </div>
+        ))}
+      </div>
+
+      <section>
+        <h3 className="font-semibold mb-3">Recent Bookings ({a.bookings.length})</h3>
+        {a.bookings.length === 0 ? (
+          <div className="bg-card border border-border rounded-xl p-10 text-center text-sm text-muted-foreground">
+            No bookings tracked yet.
+          </div>
+        ) : (
+          <div className="bg-card border border-border rounded-xl overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-xs text-muted-foreground">
+                <tr>
+                  <th className="text-left p-3 font-medium">When</th>
+                  <th className="text-left p-3 font-medium">Patient</th>
+                  <th className="text-left p-3 font-medium">Phone</th>
+                  <th className="text-left p-3 font-medium">Service</th>
+                  <th className="text-left p-3 font-medium">Slot</th>
+                  <th className="text-right p-3 font-medium">Fee</th>
+                  <th className="text-center p-3 font-medium">Paid</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {a.bookings.slice(0, 50).map((b) => (
+                  <tr key={b.id}>
+                    <td className="p-3 text-xs text-muted-foreground whitespace-nowrap">
+                      {new Date(b.at).toLocaleString("en-KE", { dateStyle: "short", timeStyle: "short" })}
+                    </td>
+                    <td className="p-3 font-medium">{b.patientName}</td>
+                    <td className="p-3 font-mono text-xs">{b.phone}</td>
+                    <td className="p-3">{b.service}</td>
+                    <td className="p-3 text-xs whitespace-nowrap">{b.date}<br/>{b.timeSlot}</td>
+                    <td className="p-3 text-right font-semibold">Ksh {b.fee}</td>
+                    <td className="p-3 text-center">
+                      {b.paid ? (
+                        <Badge className="bg-[hsl(var(--green))] text-background">Paid</Badge>
+                      ) : (
+                        <Badge variant="outline">Pending</Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
     </div>
   );
 };
@@ -718,24 +976,32 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-6xl">
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="grid grid-cols-2 sm:grid-cols-4 mb-6 h-auto">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 mb-6 h-auto">
             <TabsTrigger value="services" className="gap-1.5 py-2.5">
-              <Stethoscope className="w-4 h-4" /> Services
+              <Stethoscope className="w-4 h-4" /> <span className="hidden sm:inline">Services</span>
             </TabsTrigger>
             <TabsTrigger value="shop" className="gap-1.5 py-2.5">
-              <ShoppingBag className="w-4 h-4" /> Shop
+              <ShoppingBag className="w-4 h-4" /> <span className="hidden sm:inline">Shop</span>
             </TabsTrigger>
             <TabsTrigger value="locations" className="gap-1.5 py-2.5">
-              <MapPin className="w-4 h-4" /> Locations
+              <MapPin className="w-4 h-4" /> <span className="hidden sm:inline">Locations</span>
             </TabsTrigger>
             <TabsTrigger value="blog" className="gap-1.5 py-2.5">
-              <Newspaper className="w-4 h-4" /> Blog
+              <Newspaper className="w-4 h-4" /> <span className="hidden sm:inline">Blog</span>
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-1.5 py-2.5">
+              <History className="w-4 h-4" /> <span className="hidden sm:inline">History</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-1.5 py-2.5">
+              <BarChart3 className="w-4 h-4" /> <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="services"><ServicesTab /></TabsContent>
           <TabsContent value="shop"><ShopTab /></TabsContent>
           <TabsContent value="locations"><LocationsTab /></TabsContent>
           <TabsContent value="blog"><BlogTab /></TabsContent>
+          <TabsContent value="audit"><AuditLogTab /></TabsContent>
+          <TabsContent value="analytics"><AnalyticsTab /></TabsContent>
         </Tabs>
       </main>
     </div>

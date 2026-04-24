@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import Pricing from "./pages/Pricing";
@@ -14,6 +15,7 @@ import Disclaimer from "./pages/Disclaimer";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Consent from "./pages/Consent";
+import Cookies from "./pages/Cookies";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import BookingPayment from "./pages/BookingPayment";
@@ -24,6 +26,18 @@ import LocationsSitemap from "./pages/LocationsSitemap";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import { BookingProvider } from "./components/booking/BookingProvider";
+import CookieBanner from "./components/layout/CookieBanner";
+import { trackPageView } from "./data/contentStore";
+
+// Track every route change as a page view (skip /admin to keep visitor stats focused on the public site).
+const PageViewTracker = () => {
+  const loc = useLocation();
+  useEffect(() => {
+    if (loc.pathname.startsWith("/admin")) return;
+    trackPageView();
+  }, [loc.pathname]);
+  return null;
+};
 
 const queryClient = new QueryClient();
 
@@ -34,6 +48,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <BookingProvider>
+          <PageViewTracker />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/services" element={<Services />} />
@@ -54,8 +69,10 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/consent" element={<Consent />} />
+            <Route path="/cookies" element={<Cookies />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <CookieBanner />
         </BookingProvider>
       </BrowserRouter>
     </TooltipProvider>

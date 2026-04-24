@@ -5,10 +5,10 @@ import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Calendar, ArrowRight, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useBlogArticles } from "@/data/contentStore";
+import { usePublishedBlogArticles } from "@/data/contentStore";
 
 const Blog = () => {
-  const blogPosts = useBlogArticles();
+  const blogPosts = usePublishedBlogArticles();
   const [activeCategory, setActiveCategory] = useState("All");
 
   const blogCategories = useMemo(

@@ -28,9 +28,10 @@ import {
   ChevronLeft,
   Clock,
   FileText,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useBookingServices } from "@/data/contentStore";
+import { useBookingServices, trackBooking } from "@/data/contentStore";
 
 interface BookingFormProps {
   open: boolean;
@@ -77,16 +78,16 @@ const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProp
   const isStep2Valid = name.trim().length >= 2 && age && gender && phone.length >= 10;
   const isStep3Valid = !!selectedDate && !!selectedSlot;
 
-  const handleProceedToPayment = () => {
-    if (!selectedService || !selectedDate) return;
+  const slotEnd = useMemo(() => {
+    if (!selectedSlot) return "";
+    const [h, m] = selectedSlot.split(":").map(Number);
+    const total = h * 60 + m + 30;
+    return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+  }, [selectedSlot]);
 
-    const slotEnd = (() => {
-      const [h, m] = selectedSlot.split(":").map(Number);
-      const total = h * 60 + m + 30;
-      return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
-    })();
-
-    const bookingData = {
+  const buildBookingData = () => {
+    if (!selectedService || !selectedDate) return null;
+    return {
       opdNumber,
       patientName: name,
       age,
@@ -99,9 +100,59 @@ const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProp
       date: selectedDate.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" }),
       timeSlot: `${selectedSlot} - ${slotEnd}`,
     };
+  };
 
+  // Prefilled WhatsApp message — opens chat with the right provider, ready to send.
+  const whatsappPrefillUrl = useMemo(() => {
+    const data = buildBookingData();
+    if (!data) return "";
+    const message = encodeURIComponent(
+      `Hello, I'd like to book a consultation.\n\n` +
+      `🩺 *Service:* ${data.service}\n` +
+      `👤 *Patient:* ${data.patientName} (${data.age}, ${data.gender})\n` +
+      `📋 *OPD #:* ${data.opdNumber}\n` +
+      `📅 *Preferred Date:* ${data.date}\n` +
+      `⏰ *Time Slot:* ${data.timeSlot}\n` +
+      `🧑‍⚕️ *Provider:* ${data.provider}\n` +
+      `💰 *Fee:* Ksh ${data.fee}\n\n` +
+      `Please confirm availability. Thank you!`
+    );
+    return `https://wa.me/${data.whatsapp}?text=${message}`;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedService, selectedDate, selectedSlot, name, age, gender, phone, opdNumber, slotEnd]);
+
+  const handleProceedToPayment = () => {
+    const bookingData = buildBookingData();
+    if (!bookingData) return;
+    // Record the booking client-side so the admin Analytics tab can show it.
+    trackBooking({
+      opdNumber: bookingData.opdNumber,
+      patientName: bookingData.patientName,
+      phone: bookingData.phone,
+      service: bookingData.service,
+      provider: bookingData.provider,
+      fee: bookingData.fee,
+      date: bookingData.date,
+      timeSlot: bookingData.timeSlot,
+    });
     onOpenChange(false);
     navigate("/booking-payment", { state: bookingData });
+  };
+
+  const handleWhatsAppContinue = () => {
+    const data = buildBookingData();
+    if (!data) return;
+    trackBooking({
+      opdNumber: data.opdNumber,
+      patientName: data.patientName,
+      phone: data.phone,
+      service: data.service,
+      provider: data.provider,
+      fee: data.fee,
+      date: data.date,
+      timeSlot: data.timeSlot,
+    });
+    window.open(whatsappPrefillUrl, "_blank", "noopener,noreferrer");
   };
 
   const resetForm = () => {
@@ -389,8 +440,30 @@ const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProp
                 <CreditCard className="w-5 h-5" />
                 Pay Ksh {selectedService.fee} via M-Pesa
               </Button>
-              <p className="text-[10px] text-muted-foreground text-center">
+              <p className="text-[10px] text-muted-foreground text-center -mt-1">
                 Payment processed securely via PayHero. Appears as "MW Services" on your statement.
+              </p>
+
+              <div className="relative my-2">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-[10px] uppercase tracking-wider">
+                  <span className="bg-card px-2 text-muted-foreground">Or contact provider directly</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleWhatsAppContinue}
+                variant="outline"
+                size="lg"
+                className="w-full gap-2 border-[hsl(var(--green))]/40 text-[hsl(var(--green))] hover:bg-[hsl(var(--green))]/5 hover:text-[hsl(var(--green))]"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Send Booking on WhatsApp
+              </Button>
+              <p className="text-[10px] text-muted-foreground text-center">
+                Opens WhatsApp with your service, {selectedService.provider.toLowerCase()}, date and time pre-filled.
               </p>
             </div>
           )}
