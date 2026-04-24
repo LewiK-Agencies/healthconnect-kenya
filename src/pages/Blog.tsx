@@ -108,5 +108,4 @@ const Blog = () => {
   );
 };
 
-export { blogPosts };
 export default Blog;
