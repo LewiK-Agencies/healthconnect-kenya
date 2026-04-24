@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, MessageCircle, FileText, Home } from "lucide-react";
+import { markBookingPaid } from "@/data/contentStore";
 
 interface BookingState {
   opdNumber: string;
@@ -25,7 +26,12 @@ const BookingSuccess = () => {
   const state = location.state as BookingState | null;
 
   useEffect(() => {
-    if (!state) navigate("/services");
+    if (!state) {
+      navigate("/services");
+      return;
+    }
+    // Mark this booking as paid in the analytics store.
+    markBookingPaid(state.opdNumber);
   }, [state, navigate]);
 
   if (!state) return null;
