@@ -87,8 +87,16 @@ export function getCustomLocations(): CustomLocation[] {
 
 // ============= Setters =============
 
-export function setServicePlans(v: ServicePlan[]) { writeJson(KEYS.servicePlans, v); }
-export function setBookingServices(v: ServiceItem[]) { writeJson(KEYS.bookingServices, v); }
+export function setServicePlans(v: ServicePlan[]) {
+  const prev = getServicePlans();
+  writeJson(KEYS.servicePlans, v);
+  diffServicePlans(prev, v).forEach(addAuditEntry);
+}
+export function setBookingServices(v: ServiceItem[]) {
+  const prev = getBookingServices();
+  writeJson(KEYS.bookingServices, v);
+  diffBookingServices(prev, v).forEach(addAuditEntry);
+}
 export function setProducts(v: ShopProduct[]) { writeJson(KEYS.products, v); }
 export function setProductCategories(v: string[]) { writeJson(KEYS.productCategories, v); }
 export function setBlogArticles(v: BlogArticle[]) { writeJson(KEYS.blog, v); }
