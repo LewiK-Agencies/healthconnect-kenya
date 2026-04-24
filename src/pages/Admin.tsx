@@ -527,43 +527,81 @@ const BlogTab = () => {
     metaKeywords: "",
     publishedAt: new Date().toISOString().slice(0, 10),
     content: "## Heading\n\nWrite your article here.",
+    status: "draft",
   });
+
+  const quickPublish = (slug: string) => {
+    setBlogArticles(
+      articles.map((x) =>
+        x.slug === slug
+          ? { ...x, status: "published", publishedAt: new Date().toISOString().slice(0, 10) }
+          : x,
+      ),
+    );
+    toast({ title: "Article published" });
+  };
+
+  const quickUnpublish = (slug: string) => {
+    setBlogArticles(articles.map((x) => (x.slug === slug ? { ...x, status: "draft" } : x)));
+    toast({ title: "Article unpublished (now draft)" });
+  };
 
   if (editing) {
     return <ArticleEditor initial={editing} onCancel={() => setEditing(null)} onSave={save} />;
   }
+
+  const statusBadge = (a: BlogArticle) => {
+    const s = a.status ?? "published";
+    const isFuture =
+      s === "scheduled" && new Date(a.publishedAt + "T00:00:00").getTime() > Date.now();
+    if (s === "published") return <Badge className="bg-[hsl(var(--green))] text-background">Published</Badge>;
+    if (s === "scheduled" && isFuture) return <Badge className="bg-amber-500 text-background">Scheduled</Badge>;
+    if (s === "scheduled") return <Badge className="bg-[hsl(var(--green))] text-background">Live</Badge>;
+    return <Badge variant="outline">Draft</Badge>;
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-xl font-bold">Blog Articles</h2>
-          <p className="text-sm text-muted-foreground">{articles.length} articles</p>
+          <p className="text-sm text-muted-foreground">
+            {articles.length} total · Only Published / past-Scheduled appear on /blog
+          </p>
         </div>
         <Button size="sm" onClick={() => setEditing(newArticle())} className="gap-1">
           <Plus className="w-4 h-4" /> New Article
         </Button>
       </div>
       <div className="grid gap-3">
-        {articles.map((a) => (
-          <div key={a.slug} className="bg-card border border-border rounded-xl p-4 flex gap-4">
-            <img src={a.coverImage} alt="" className="w-20 h-20 rounded-lg object-cover bg-muted shrink-0" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <Badge variant="outline" className="text-xs">{a.category}</Badge>
-                <span className="text-xs text-muted-foreground">{a.publishedAt}</span>
+        {articles.map((a) => {
+          const status = a.status ?? "published";
+          return (
+            <div key={a.slug} className="bg-card border border-border rounded-xl p-4 flex gap-4">
+              <img src={a.coverImage} alt="" className="w-20 h-20 rounded-lg object-cover bg-muted shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  {statusBadge(a)}
+                  <Badge variant="outline" className="text-xs">{a.category}</Badge>
+                  <span className="text-xs text-muted-foreground">{a.publishedAt}</span>
+                </div>
+                <h3 className="font-semibold truncate">{a.title}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-1">{a.excerpt}</p>
               </div>
-              <h3 className="font-semibold truncate">{a.title}</h3>
-              <p className="text-sm text-muted-foreground line-clamp-1">{a.excerpt}</p>
+              <div className="flex flex-col gap-2 shrink-0">
+                <Button size="sm" variant="outline" onClick={() => setEditing(a)}>Edit</Button>
+                {status !== "published" ? (
+                  <Button size="sm" variant="outline" onClick={() => quickPublish(a.slug)}>Publish</Button>
+                ) : (
+                  <Button size="sm" variant="outline" onClick={() => quickUnpublish(a.slug)}>Unpublish</Button>
+                )}
+                <Button size="sm" variant="outline" onClick={() => remove(a.slug)} className="text-destructive">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              </div>
             </div>
-            <div className="flex flex-col gap-2 shrink-0">
-              <Button size="sm" variant="outline" onClick={() => setEditing(a)}>Edit</Button>
-              <Button size="sm" variant="outline" onClick={() => remove(a.slug)} className="text-destructive">
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
