@@ -440,8 +440,30 @@ const BookingForm = ({ open, onOpenChange, preselectedService }: BookingFormProp
                 <CreditCard className="w-5 h-5" />
                 Pay Ksh {selectedService.fee} via M-Pesa
               </Button>
-              <p className="text-[10px] text-muted-foreground text-center">
+              <p className="text-[10px] text-muted-foreground text-center -mt-1">
                 Payment processed securely via PayHero. Appears as "MW Services" on your statement.
+              </p>
+
+              <div className="relative my-2">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-[10px] uppercase tracking-wider">
+                  <span className="bg-card px-2 text-muted-foreground">Or contact provider directly</span>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleWhatsAppContinue}
+                variant="outline"
+                size="lg"
+                className="w-full gap-2 border-[hsl(var(--green))]/40 text-[hsl(var(--green))] hover:bg-[hsl(var(--green))]/5 hover:text-[hsl(var(--green))]"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Send Booking on WhatsApp
+              </Button>
+              <p className="text-[10px] text-muted-foreground text-center">
+                Opens WhatsApp with your service, {selectedService.provider.toLowerCase()}, date and time pre-filled.
               </p>
             </div>
           )}
