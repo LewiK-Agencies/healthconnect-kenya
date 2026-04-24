@@ -23,6 +23,8 @@ const KEYS = {
   productCategories: "behealth.admin.productCategories.v1",
   blog: "behealth.admin.blog.v1",
   customLocations: "behealth.admin.customLocations.v1",
+  auditLog: "behealth.admin.auditLog.v1",
+  analytics: "behealth.admin.analytics.v1",
 } as const;
 
 const STORE_EVENT = "behealth:content-changed";
