@@ -976,24 +976,32 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-6xl">
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="grid grid-cols-2 sm:grid-cols-4 mb-6 h-auto">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 mb-6 h-auto">
             <TabsTrigger value="services" className="gap-1.5 py-2.5">
-              <Stethoscope className="w-4 h-4" /> Services
+              <Stethoscope className="w-4 h-4" /> <span className="hidden sm:inline">Services</span>
             </TabsTrigger>
             <TabsTrigger value="shop" className="gap-1.5 py-2.5">
-              <ShoppingBag className="w-4 h-4" /> Shop
+              <ShoppingBag className="w-4 h-4" /> <span className="hidden sm:inline">Shop</span>
             </TabsTrigger>
             <TabsTrigger value="locations" className="gap-1.5 py-2.5">
-              <MapPin className="w-4 h-4" /> Locations
+              <MapPin className="w-4 h-4" /> <span className="hidden sm:inline">Locations</span>
             </TabsTrigger>
             <TabsTrigger value="blog" className="gap-1.5 py-2.5">
-              <Newspaper className="w-4 h-4" /> Blog
+              <Newspaper className="w-4 h-4" /> <span className="hidden sm:inline">Blog</span>
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-1.5 py-2.5">
+              <History className="w-4 h-4" /> <span className="hidden sm:inline">History</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="gap-1.5 py-2.5">
+              <BarChart3 className="w-4 h-4" /> <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="services"><ServicesTab /></TabsContent>
           <TabsContent value="shop"><ShopTab /></TabsContent>
           <TabsContent value="locations"><LocationsTab /></TabsContent>
           <TabsContent value="blog"><BlogTab /></TabsContent>
+          <TabsContent value="audit"><AuditLogTab /></TabsContent>
+          <TabsContent value="analytics"><AnalyticsTab /></TabsContent>
         </Tabs>
       </main>
     </div>
