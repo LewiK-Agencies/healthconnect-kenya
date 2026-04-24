@@ -646,7 +646,7 @@ const ArticleEditor = ({
           <Label className="text-xs">Excerpt</Label>
           <Textarea rows={2} value={a.excerpt} onChange={(e) => update({ excerpt: e.target.value })} />
         </div>
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <div>
             <Label className="text-xs">Category</Label>
             <Input value={a.category} onChange={(e) => update({ category: e.target.value })} />
@@ -656,10 +656,29 @@ const ArticleEditor = ({
             <Input value={a.author} onChange={(e) => update({ author: e.target.value })} />
           </div>
           <div>
-            <Label className="text-xs">Published Date</Label>
+            <Label className="text-xs">Publish Date</Label>
             <Input type="date" value={a.publishedAt} onChange={(e) => update({ publishedAt: e.target.value })} />
           </div>
+          <div>
+            <Label className="text-xs">Status</Label>
+            <Select
+              value={a.status ?? "published"}
+              onValueChange={(v) => update({ status: v as BlogStatus })}
+            >
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft (hidden)</SelectItem>
+                <SelectItem value="scheduled">Scheduled (auto-publish on date)</SelectItem>
+                <SelectItem value="published">Published (live now)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+        {(a.status ?? "published") === "scheduled" && (
+          <p className="text-xs text-muted-foreground -mt-2">
+            Goes live automatically on <strong>{a.publishedAt}</strong>. Until then it stays hidden from /blog.
+          </p>
+        )}
         <div>
           <Label className="text-xs">Cover Image URL</Label>
           <Input value={a.coverImage} onChange={(e) => update({ coverImage: e.target.value })} />
