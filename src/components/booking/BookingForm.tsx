@@ -28,9 +28,10 @@ import {
   ChevronLeft,
   Clock,
   FileText,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useBookingServices } from "@/data/contentStore";
+import { useBookingServices, trackBooking } from "@/data/contentStore";
 
 interface BookingFormProps {
   open: boolean;
