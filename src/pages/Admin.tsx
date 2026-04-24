@@ -16,6 +16,9 @@ import {
   Eye,
   EyeOff,
   Heart,
+  History,
+  BarChart3,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
