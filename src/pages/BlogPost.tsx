@@ -4,12 +4,14 @@ import Footer from "@/components/layout/Footer";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 import { Calendar, User, ArrowLeft, Tag, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useBlogArticles } from "@/data/contentStore";
+import { isArticleLive, useBlogArticles } from "@/data/contentStore";
 
 const BlogPost = () => {
   const { slug } = useParams();
   const blogPosts = useBlogArticles();
-  const post = blogPosts.find((p) => p.slug === slug);
+  const found = blogPosts.find((p) => p.slug === slug);
+  // Hide drafts / future-scheduled posts from the public route.
+  const post = found && isArticleLive(found) ? found : undefined;
 
   // 1. Handle "Post Not Found" State
   if (!post) {
