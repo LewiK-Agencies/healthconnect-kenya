@@ -219,3 +219,233 @@ export function useAdminAuth() {
     },
   };
 }
+
+// ============= Audit log (price/service changes) =============
+
+export type AuditAction =
+  | "price_changed"
+  | "plan_added"
+  | "plan_removed"
+  | "plan_renamed"
+  | "booking_fee_changed"
+  | "booking_service_renamed";
+
+export interface AuditEntry {
+  id: string;
+  at: string; // ISO
+  action: AuditAction;
+  target: string; // service / plan name
+  details: string;
+}
+
+const MAX_AUDIT_ENTRIES = 500;
+
+export function getAuditLog(): AuditEntry[] {
+  return readJson<AuditEntry[]>(KEYS.auditLog, []);
+}
+
+function addAuditEntry(entry: Omit<AuditEntry, "id" | "at">) {
+  const log = getAuditLog();
+  const next: AuditEntry = {
+    ...entry,
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    at: new Date().toISOString(),
+  };
+  const trimmed = [next, ...log].slice(0, MAX_AUDIT_ENTRIES);
+  writeJson(KEYS.auditLog, trimmed);
+}
+
+export function clearAuditLog() {
+  writeJson(KEYS.auditLog, []);
+}
+
+function diffServicePlans(prev: ServicePlan[], next: ServicePlan[]): Array<Omit<AuditEntry, "id" | "at">> {
+  const out: Array<Omit<AuditEntry, "id" | "at">> = [];
+  const prevByIdx = new Map(prev.map((p, i) => [i, p]));
+  // additions
+  if (next.length > prev.length) {
+    for (let i = prev.length; i < next.length; i++) {
+      out.push({ action: "plan_added", target: next[i].name, details: `Added plan "${next[i].name}" at Ksh ${next[i].price}` });
+    }
+  }
+  // removals (any prev index missing in next)
+  if (prev.length > next.length) {
+    for (let i = next.length; i < prev.length; i++) {
+      out.push({ action: "plan_removed", target: prev[i].name, details: `Removed plan "${prev[i].name}"` });
+    }
+  }
+  // edits at common indices
+  const commonLen = Math.min(prev.length, next.length);
+  for (let i = 0; i < commonLen; i++) {
+    const a = prevByIdx.get(i)!;
+    const b = next[i];
+    if (a.price !== b.price) {
+      out.push({
+        action: "price_changed",
+        target: b.name,
+        details: `Plan "${b.name}" price changed Ksh ${a.price} → Ksh ${b.price}`,
+      });
+    }
+    if (a.name !== b.name) {
+      out.push({
+        action: "plan_renamed",
+        target: b.name,
+        details: `Plan renamed "${a.name}" → "${b.name}"`,
+      });
+    }
+  }
+  return out;
+}
+
+function diffBookingServices(prev: ServiceItem[], next: ServiceItem[]): Array<Omit<AuditEntry, "id" | "at">> {
+  const out: Array<Omit<AuditEntry, "id" | "at">> = [];
+  const prevMap = new Map(prev.map((s) => [s.value, s]));
+  for (const b of next) {
+    const a = prevMap.get(b.value);
+    if (!a) continue;
+    if (a.fee !== b.fee) {
+      out.push({
+        action: "booking_fee_changed",
+        target: b.label,
+        details: `Booking fee for "${b.label}" changed Ksh ${a.fee} → Ksh ${b.fee}`,
+      });
+    }
+    if (a.label !== b.label) {
+      out.push({
+        action: "booking_service_renamed",
+        target: b.label,
+        details: `Booking service renamed "${a.label}" → "${b.label}"`,
+      });
+    }
+  }
+  return out;
+}
+
+export function useAuditLog(): AuditEntry[] {
+  return useSyncExternalStore(subscribe, getAuditLog, () => []);
+}
+
+// ============= Analytics (client-side, localStorage) =============
+
+export interface AnalyticsBooking {
+  id: string;
+  at: string;
+  opdNumber: string;
+  patientName: string;
+  phone: string;
+  service: string;
+  provider: string;
+  fee: number;
+  date: string;
+  timeSlot: string;
+  paid: boolean;
+}
+
+interface AnalyticsState {
+  visitorId: string;
+  firstSeen: string;
+  lastSeen: string;
+  pageViews: number;
+  uniqueVisitorIds: string[]; // distinct IDs seen on this device/browser
+  bookings: AnalyticsBooking[];
+}
+
+function emptyAnalytics(): AnalyticsState {
+  return {
+    visitorId: "",
+    firstSeen: "",
+    lastSeen: "",
+    pageViews: 0,
+    uniqueVisitorIds: [],
+    bookings: [],
+  };
+}
+
+function getAnalyticsRaw(): AnalyticsState {
+  return readJson<AnalyticsState>(KEYS.analytics, emptyAnalytics());
+}
+
+const VISITOR_ID_KEY = "behealth.visitor.id";
+
+function ensureVisitorId(): string {
+  if (typeof window === "undefined") return "";
+  let id = window.localStorage.getItem(VISITOR_ID_KEY);
+  if (!id) {
+    id = `v_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+    window.localStorage.setItem(VISITOR_ID_KEY, id);
+  }
+  return id;
+}
+
+export function trackPageView() {
+  if (typeof window === "undefined") return;
+  const id = ensureVisitorId();
+  const a = getAnalyticsRaw();
+  const now = new Date().toISOString();
+  const next: AnalyticsState = {
+    ...a,
+    visitorId: id,
+    firstSeen: a.firstSeen || now,
+    lastSeen: now,
+    pageViews: a.pageViews + 1,
+    uniqueVisitorIds: a.uniqueVisitorIds.includes(id)
+      ? a.uniqueVisitorIds
+      : [...a.uniqueVisitorIds, id],
+  };
+  writeJson(KEYS.analytics, next);
+}
+
+export function trackBooking(b: Omit<AnalyticsBooking, "id" | "at" | "paid"> & { paid?: boolean }) {
+  if (typeof window === "undefined") return;
+  const a = getAnalyticsRaw();
+  const entry: AnalyticsBooking = {
+    ...b,
+    paid: b.paid ?? false,
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    at: new Date().toISOString(),
+  };
+  const next: AnalyticsState = { ...a, bookings: [entry, ...a.bookings].slice(0, 1000) };
+  writeJson(KEYS.analytics, next);
+}
+
+export function markBookingPaid(opdNumber: string) {
+  const a = getAnalyticsRaw();
+  const next: AnalyticsState = {
+    ...a,
+    bookings: a.bookings.map((x) => (x.opdNumber === opdNumber ? { ...x, paid: true } : x)),
+  };
+  writeJson(KEYS.analytics, next);
+}
+
+export function getAnalytics() {
+  return getAnalyticsRaw();
+}
+
+export function useAnalytics(): AnalyticsState {
+  return useSyncExternalStore(subscribe, getAnalyticsRaw, emptyAnalytics);
+}
+
+export function clearAnalytics() {
+  writeJson(KEYS.analytics, emptyAnalytics());
+}
+
+// ============= Blog publishing helpers =============
+
+/** True if the article is published OR scheduled with a date in the past/today. */
+export function isArticleLive(a: BlogArticle, now: Date = new Date()): boolean {
+  const status = a.status ?? "published";
+  if (status === "draft") return false;
+  if (status === "published") return true;
+  // scheduled
+  const target = new Date(a.publishedAt + "T00:00:00");
+  return target.getTime() <= now.getTime();
+}
+
+export function getPublishedBlogArticles(): BlogArticle[] {
+  return getBlogArticles().filter((a) => isArticleLive(a));
+}
+
+export function usePublishedBlogArticles(): BlogArticle[] {
+  return useSyncExternalStore(subscribe, getPublishedBlogArticles, () => defaultBlogArticles);
+}
+
