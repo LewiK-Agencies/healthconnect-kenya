@@ -123,6 +123,7 @@ const Footer = () => {
               {[
                 { href: "/disclaimer", label: "Medical Disclaimer" },
                 { href: "/privacy", label: "Privacy Policy" },
+                { href: "/cookies", label: "Cookie Policy" },
                 { href: "/terms", label: "Terms & Conditions" },
                 { href: "/consent", label: "Consent Form" },
               ].map((link) => (
